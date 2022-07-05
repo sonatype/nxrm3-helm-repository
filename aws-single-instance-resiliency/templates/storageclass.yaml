@@ -1,0 +1,7 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: {{ .Chart.Name }}-{{ .Chart.Version }}.{{ .Release.Name }}-local-storage
+  namespace: {{ .Values.namespaces.nexusNs }}
+provisioner: kubernetes.io/no-provisioner
+volumeBindingMode: WaitForFirstConsumer

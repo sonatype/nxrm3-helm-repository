@@ -1,0 +1,77 @@
+# Declare variables to be passed into your templates.
+namespaces:
+    nexusNs: nexusrepo
+    cloudwatchNs: amazon-cloudwatch
+deployment:
+   name: nxrm.deployment
+   clusterName: nxrm-nexus
+   logsRegion: us-east-1
+   initContainer:
+        image:
+          repository: busybox
+          tag: 1.33.1
+   container:
+        image:
+          repository: sonatype/nexus3
+          tag: 3.40.1
+        containerPort: 8081
+        pullPolicy: IfNotPresent
+        env:
+          nexusDBName: nexus
+          nexusDBPort: 3306
+   requestLogContainer:
+        image:
+          repository: busybox
+          tag: 1.33.1
+   auditLogContainer:
+        image:
+          repository: busybox
+          tag: 1.33.1
+   taskLogContainer:
+        image:
+          repository: busybox
+          tag: 1.33.1
+serviceAccount:
+     name: nexus-repository-deployment-sa #This SA is created as part of steps under "AWS Secrets Manager"
+     role: arn:aws:iam::000000000000:role/nxrm-nexus-role #Role with secretsmanager permissions
+ingress:
+  nxrmIngress:
+   scheme: internal
+   port: 9090
+   subnets: subnet-000000  #comma separated list of Subnets
+  dockerIngress:  #Ingress for Docker Connector
+   scheme: internal
+   port: 9090
+   subnets: subnet-000000  #comma separated list of Subnets
+pv:
+  storage: 120Gi
+  volumeMode: Filesystem
+  accessModes: ReadWriteOnce
+  reclaimPolicy: Retain
+  path: /mnt
+  zones:
+    zone1: us-east-1a
+    zone2: us-east-1b
+pvc:
+  accessModes: ReadWriteOnce
+  storage: 100Gi
+
+service:  #Nexus Repo NodePort Service
+  nexus:
+   type: NodePort
+   protocol: TCP
+   port: 80
+   targetPort: 8081
+  docker:  #Nodeport Service for Docker connector
+   type: NodePort
+   protocol: TCP
+   port: 9090
+   targetPort: 9090
+secret:
+  license:
+   arn: arn:aws:secretsmanager:us-east-1:000000000000:secret:nxrm-nexus-license
+   alias: nxrm-license.lic
+  rds:
+    arn: arn:aws:secretsmanager:us-east-1:000000000000:secret:nxrmrds-cred-nexus
+  adminpassword:
+    arn: arn:aws:secretsmanager:us-east-1:000000000000:secret:admin-nxrm-password

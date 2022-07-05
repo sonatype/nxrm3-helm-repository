@@ -1,0 +1,41 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  namespace: {{ .Values.namespaces.nexusNs }}
+  name: {{ .Chart.Name }}-{{ .Chart.Version }}.{{ .Release.Name }}-ingress
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: {{ .Values.ingress.nxrmIngress.scheme }}
+    alb.ingress.kubernetes.io/subnets: "{{ .Values.ingress.nxrmIngress.subnets }}"
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Chart.Name }}-service
+                port:
+                  number: {{ .Values.service.nexus.port }}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  namespace: {{ .Values.namespaces.nexusNs }}
+  name: {{ .Chart.Name }}-{{ .Chart.Version }}.{{ .Release.Name }}-ingress-nxrm-docker
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: {{ .Values.ingress.dockerIngress.scheme }}
+    alb.ingress.kubernetes.io/subnets: {{ .Values.ingress.dockerIngress.subnets }}
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Chart.Name }}-docker-service
+                port:
+                  number: {{ .Values.ingress.dockerIngress.port }}
