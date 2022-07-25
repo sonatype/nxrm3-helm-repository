@@ -6,6 +6,8 @@ deployment:
    name: nxrm.deployment
    clusterName: nxrm-nexus
    logsRegion: us-east-1
+   clustered: false
+   jwtenabled: false
    initContainer:
         image:
           repository: busybox
@@ -35,14 +37,16 @@ serviceAccount:
      name: nexus-repository-deployment-sa #This SA is created as part of steps under "AWS Secrets Manager"
      role: arn:aws:iam::000000000000:role/nxrm-nexus-role #Role with secretsmanager permissions
 ingress:
-  nxrmIngress:
-   scheme: internal
-   port: 9090
-   subnets: subnet-000000  #comma separated list of Subnets
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internal # scheme
+    alb.ingress.kubernetes.io/subnets: subnet-1,subnet-2 #comma separated list of subnet ids
   dockerIngress:  #Ingress for Docker Connector
-   scheme: internal
-   port: 9090
-   subnets: subnet-000000  #comma separated list of Subnets
+    annotations:
+      kubernetes.io/ingress.class: alb
+      alb.ingress.kubernetes.io/scheme: internal # scheme
+      alb.ingress.kubernetes.io/subnets: subnet-1,subnet-2 #comma separated list of subnet ids
+    port: 9090
 pv:
   storage: 120Gi
   volumeMode: Filesystem

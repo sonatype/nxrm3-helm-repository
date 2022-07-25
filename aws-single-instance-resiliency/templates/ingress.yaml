@@ -3,10 +3,10 @@ kind: Ingress
 metadata:
   namespace: {{ .Values.namespaces.nexusNs }}
   name: {{ .Chart.Name }}-{{ .Chart.Version }}.{{ .Release.Name }}-ingress
+  {{- with .Values.ingress.annotations }}
   annotations:
-    kubernetes.io/ingress.class: alb
-    alb.ingress.kubernetes.io/scheme: {{ .Values.ingress.nxrmIngress.scheme }}
-    alb.ingress.kubernetes.io/subnets: "{{ .Values.ingress.nxrmIngress.subnets }}"
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   rules:
     - http:
@@ -24,10 +24,10 @@ kind: Ingress
 metadata:
   namespace: {{ .Values.namespaces.nexusNs }}
   name: {{ .Chart.Name }}-{{ .Chart.Version }}.{{ .Release.Name }}-ingress-nxrm-docker
+  {{- with .Values.ingress.dockerIngress.annotations }}
   annotations:
-    kubernetes.io/ingress.class: alb
-    alb.ingress.kubernetes.io/scheme: {{ .Values.ingress.dockerIngress.scheme }}
-    alb.ingress.kubernetes.io/subnets: {{ .Values.ingress.dockerIngress.subnets }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   rules:
     - http:
