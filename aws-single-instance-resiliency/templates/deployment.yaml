@@ -6,7 +6,7 @@ metadata:
   labels:
     app: nxrm
 spec:
-  replicas: {{ .Values.deployment.replicaCount }}
+  replicas: 1
   selector:
     matchLabels:
       app: nxrm
@@ -74,9 +74,7 @@ spec:
           -Dnexus.datastore.enabled=true -Djava.util.prefs.userRoot=${NEXUS_DATA}/javaprefs \
           -Dnexus.datastore.nexus.jdbcUrl=jdbc:postgresql://${DB_HOST}:{{ .Values.deployment.container.env.nexusDBPort }}/${DB_NAME} \
           -Dnexus.datastore.nexus.username=${DB_USER} \
-          -Dnexus.datastore.nexus.password=${DB_PASSWORD}
-          -Dnexus.datastore.clustered.enabled={{ .Values.deployment.clustered }} \
-          -Dnexus.jwt.enabled={{ .Values.deployment.jwtenabled }}"
+          -Dnexus.datastore.nexus.password=${DB_PASSWORD}"
           volumeMounts:
             - mountPath: /nxrm-secrets
               name: nxrm-secrets

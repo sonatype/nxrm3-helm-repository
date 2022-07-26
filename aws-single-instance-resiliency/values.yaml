@@ -6,8 +6,6 @@ deployment:
    name: nxrm.deployment
    clusterName: nxrm-nexus
    logsRegion: us-east-1
-   clustered: false
-   jwtenabled: false
    initContainer:
         image:
           repository: busybox
