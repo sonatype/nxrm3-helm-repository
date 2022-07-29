@@ -50,7 +50,9 @@ You will also need to complete the steps below. See the referenced AWS documenta
 ## Deployment
 1. Pull the [nxrm-resiliency-aws-helmchart](https://github.com/sonatype/nxrm-resiliency-aws-helmchart).
 2. Ensure you have updated your values.yaml with appropriate values for your environment.
-3. Install the chart using the following:
+  - Note that you can specify Ingress annotations via the values.yaml. 
+  - If you wish to add [Labels](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/), you can do so via kubectl. See the [kubectl Cheat Sheet](https://kubernetes.io/docs/reference/kubectl/cheatsheet/) for specific commands.
+4. Install the chart using the following:
   
 ```helm install nxrm nexus/nxrm-aws-resiliency --values values.yaml```
   
