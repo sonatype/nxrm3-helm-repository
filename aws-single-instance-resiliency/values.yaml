@@ -39,11 +39,13 @@ ingress:
     kubernetes.io/ingress.class: alb
     alb.ingress.kubernetes.io/scheme: internal # scheme
     alb.ingress.kubernetes.io/subnets: subnet-1,subnet-2 #comma separated list of subnet ids
+  host: nexus.demo
   dockerIngress:  #Ingress for Docker Connector
     annotations:
       kubernetes.io/ingress.class: alb
       alb.ingress.kubernetes.io/scheme: internal # scheme
       alb.ingress.kubernetes.io/subnets: subnet-1,subnet-2 #comma separated list of subnet ids
+    host: docker.demo
     port: 9090
 pv:
   storage: 120Gi

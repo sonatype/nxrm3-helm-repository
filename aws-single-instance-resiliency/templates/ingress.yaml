@@ -9,7 +9,8 @@ metadata:
   {{- end }}
 spec:
   rules:
-    - http:
+    - host: {{ .Values.ingress.host }}
+      http:
         paths:
           - path: /
             pathType: Prefix
@@ -30,7 +31,8 @@ metadata:
   {{- end }}
 spec:
   rules:
-    - http:
+    - host: {{ .Values.ingress.dockerIngress.host }}
+      http:
         paths:
           - path: /
             pathType: Prefix
