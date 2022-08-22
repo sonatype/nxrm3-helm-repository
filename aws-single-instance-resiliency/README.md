@@ -48,7 +48,7 @@ You will also need to complete the steps below. See the referenced AWS documenta
 ---
 
 ## Deployment
-1. Pull the [nxrm-resiliency-aws-helmchart](https://github.com/sonatype/nxrm-resiliency-aws-helmchart).
+1. Pull the [nxrm-resiliency-aws-helmchart](https://github.com/sonatype/nxrm3-helm-repository/blob/main/aws-single-instance-resiliency/Chart.yaml).
 2. Ensure you have updated your values.yaml with appropriate values for your environment.
 3. Install the chart using the following:
   
