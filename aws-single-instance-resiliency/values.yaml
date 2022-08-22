@@ -13,7 +13,7 @@ deployment:
    container:
         image:
           repository: sonatype/nexus3
-          tag: 3.40.1
+          tag: 3.41.1
         containerPort: 8081
         pullPolicy: IfNotPresent
         env:
