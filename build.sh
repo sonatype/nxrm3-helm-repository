@@ -1,3 +1,4 @@
+#!/bin/sh
 #
 # Copyright (c) 2020-present Sonatype, Inc. All rights reserved.
 #
@@ -11,10 +12,22 @@
 # See the Apache License Version 2.0 for the specific language governing permissions and limitations there under.
 #
 
-FROM docker-all.repo.sonatype.com/alpine/helm:3.9.3
+helm plugin install https://github.com/quintush/helm-unittest
 
-RUN apk update && apk upgrade && \
-    apk add --no-cache bash git openssh
+set -e
 
-RUN mkdir /.local /.cache && chmod 777 /.local /.cache
+# lint yaml of charts
+helm lint ./aws-single-instance-resiliency
+helm lint ./single-inst-oss-pro-kubernetes
 
+# unit test
+(cd ./aws-single-instance-resiliency; helm unittest -3 -t junit -o test-output.xml .)
+(cd ./single-inst-oss-pro-kubernetes; helm unittest -3 -t junit -o test-output.xml .)
+
+# package the charts into tgz archives
+helm package ./aws-single-instance-resiliency --destination docs
+helm package ./single-inst-oss-pro-kubernetes --destination docs
+
+# index the existing tgz archives
+cd docs
+helm repo index . --url https://sonatype.github.io/helm3-charts
