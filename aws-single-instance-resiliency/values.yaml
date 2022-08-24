@@ -41,7 +41,7 @@ ingress:
     alb.ingress.kubernetes.io/scheme: internal # scheme
     alb.ingress.kubernetes.io/subnets: subnet-1,subnet-2 #comma separated list of subnet ids
   dockerIngress:  #Ingress for Docker Connector
-    # host: "docker.ingress.rule.host" #host to apply this ingress rule to  
+    host: "docker.ingress.rule.host" #host to apply this ingress rule to  
     annotations:
       kubernetes.io/ingress.class: alb
       alb.ingress.kubernetes.io/scheme: internal # scheme
