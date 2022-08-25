@@ -18,22 +18,17 @@ final jira = [
 ]
 
 final jiraVersionMappings = [
-  'nexus-repository-manager-single-instance': 'helm-nxrm',
-  'nexus-repository-manager-aws-resilient-single-instance': 'helm-nxrm-aws-resiliency'
+  'nexus-repository-manager': 'helm-nxrm',
+  'nxrm-aws-resiliency': 'helm-nxrm-aws-resiliency'
 ]
 
 final chartLocation = [
-  'nexus-repository-manager-single-instance': 'single-inst-oss-pro-kubernetes',
-  'nexus-repository-manager-aws-resilient-single-instance': 'aws-single-instance-resiliency'
+  'nexus-repository-manager': 'nexus-repository-manager',
+  'nxrm-aws-resiliency': 'nxrm-aws-resiliency'
 ]
 
 properties([
   parameters([
-    choice(
-      choices: ['', 'nexus-repository-manager-single-instance', 'nexus-repository-manager-aws-resilient-single-instance'],
-      name: 'chart',
-      description: 'Chart to deploy.',
-    ),
     string(
       name: 'appVersion',
       description: 'Version of the application image, like "3.41.0"',
@@ -60,9 +55,10 @@ dockerizedBuildPipeline(
   buildAndTest: {
     sonatypeZionGitConfig()
     runSafely "git checkout ${gitBranch(env)}"
-    runSafely "./upgrade.sh ./${chartLocation[params.chart]} ${chartVersion} ${params.appVersion}"
-    runSafely './build.sh'
-    runSafely 'git add aws-single-instance-resiliency single-inst-oss-pro-kubernetes'
+    runSafely "./upgrade.sh ./nexus-repository-manager ${chartVersion} ${params.appVersion}"
+    runSafely "./upgrade.sh ./nxrm-aws-resiliency ${chartVersion} ${params.appVersion}"
+    runSafely './build.sh'    
+    runSafely 'git add nxrm-aws-resiliency nexus-repository-manager'
   },
   skipVulnerabilityScan: true,
   archiveArtifacts: 'docs/*',
@@ -98,31 +94,6 @@ dockerizedBuildPipeline(
     buildNotifications(currentBuild, env)
   }
 )
-
-String verifyIndexYamlAndTarFile(String chart) {
-  // Get current version
-  def indexFile = readYaml file: 'docs/index.yaml'
-  String version = indexFile.entries[chart][0].version
-
-  // Check tar file
-  String repo_url = 'https://sonatype.github.io/helm3-charts/'
-  verifyDownloadLinks(
-    urlParts: [repo_url, chart, '-', version],
-    urlSuffixes: ['.tgz'], retryCount: 2, retryDelay: 60
-  )
-
-  // Get repository version
-  def response = httpRequest "${repo_url}/index.yaml"
-  def repositoryIndexFile = readYaml text:response.content
-  String repositoryVersion = repositoryIndexFile.entries[chart][0].version
-
-  if (!version.equals(repositoryVersion)) {
-    error "Released version: ${version} is different " +
-          "from helm repository version: ${repositoryVersion}"
-  }
-
-  return repositoryVersion
-}
 
 String calculateChartVersion(final String chartVersion, final String appVersion) {
   if (chartVersion) {

@@ -17,17 +17,13 @@ helm plugin install https://github.com/quintush/helm-unittest
 set -e
 
 # lint yaml of charts
-helm lint ./aws-single-instance-resiliency
-helm lint ./single-inst-oss-pro-kubernetes
+helm lint ./nxrm-aws-resiliency
+helm lint ./nexus-repository-manager
 
 # unit test
-(cd ./aws-single-instance-resiliency; helm unittest -3 -t junit -o test-output.xml .)
-(cd ./single-inst-oss-pro-kubernetes; helm unittest -3 -t junit -o test-output.xml .)
+(cd ./nxrm-aws-resiliency; helm unittest -3 -t junit -o test-output.xml .)
+(cd ./nexus-repository-manager; helm unittest -3 -t junit -o test-output.xml .)
 
 # package the charts into tgz archives
-helm package ./aws-single-instance-resiliency --destination docs
-helm package ./single-inst-oss-pro-kubernetes --destination docs
-
-# index the existing tgz archives
-cd docs
-helm repo index . --url https://sonatype.github.io/helm3-charts
+helm package ./nxrm-aws-resiliency --destination docs
+helm package ./nexus-repository-manager --destination docs
