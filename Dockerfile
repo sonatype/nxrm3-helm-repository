@@ -1,14 +1,9 @@
 #
-# Copyright (c) 2020-present Sonatype, Inc. All rights reserved.
+# Copyright (c) 2008-present Sonatype, Inc.
 #
-# This program is licensed to you under the Apache License Version 2.0,
-# and you may not use this file except in compliance with the Apache License Version 2.0.
-# You may obtain a copy of the Apache License Version 2.0 at http://www.apache.org/licenses/LICENSE-2.0.
-#
-# Unless required by applicable law or agreed to in writing,
-# software distributed under the Apache License Version 2.0 is distributed on an
-# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the Apache License Version 2.0 for the specific language governing permissions and limitations there under.
+# All rights reserved. Includes the third-party code listed at http://links.sonatype.com/products/nexus/pro/attributions
+# Sonatype and Sonatype Nexus are trademarks of Sonatype, Inc. Apache Maven is a trademark of the Apache Foundation.
+# M2Eclipse is a trademark of the Eclipse Foundation. All other trademarks are the property of their respective owners.
 #
 
 FROM docker-all.repo.sonatype.com/alpine/helm:3.9.3
