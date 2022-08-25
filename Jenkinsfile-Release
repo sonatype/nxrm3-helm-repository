@@ -63,7 +63,7 @@ dockerizedBuildPipeline(
   deployCondition: { true },
   deploy: {
     runSafely 'git add docs'
-    runSafely "git commit -m 'Release Update for ${params.chart} ${chartVersion}'"
+    runSafely "git commit -m 'Release Update for ${chartVersion}'"
 
     sshagent(credentials: [sonatypeZionCredentialsId()]) {
       runSafely 'git push'
