@@ -1,3 +1,4 @@
+#!/bin/sh
 #
 # Sonatype Nexus (TM) Open Source Version
 # Copyright (c) 2008-present Sonatype, Inc.
@@ -11,10 +12,28 @@
 # Eclipse Foundation. All other trademarks are the property of their respective owners.
 #
 
-FROM docker-all.repo.sonatype.com/alpine/helm:3.9.3
+if [ $# != 3 ]; then
+    echo "Usage: $0 <dir> <chart-version> <app-version>"
+    exit 1
+fi
 
-RUN apk update && apk upgrade && \
-    apk add --no-cache bash git openssh
+DIR="$1"
+CHART_VERSION="$2"
+APP_VERSION="$3"
 
-RUN mkdir /.local /.cache && chmod 777 /.local /.cache
+OUTPUT_FILE=$(mktemp)
 
+cat "$DIR/Chart.yaml" \
+  | sed -E "s/version: .+/version: $CHART_VERSION/" \
+  | sed -E "s/appVersion: .+/appVersion: $APP_VERSION/" \
+  > "$OUTPUT_FILE"
+
+mv "$OUTPUT_FILE" "$DIR/Chart.yaml"
+
+cat "$DIR/values.yaml" \
+  | sed -E "s/^  tag: .+$/  tag: $APP_VERSION/" \
+  > "$OUTPUT_FILE"
+
+mv "$OUTPUT_FILE" "$DIR/values.yaml"
+
+git diff "$DIR"

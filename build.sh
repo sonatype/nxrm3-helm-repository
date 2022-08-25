@@ -1,3 +1,4 @@
+#!/bin/sh
 #
 # Sonatype Nexus (TM) Open Source Version
 # Copyright (c) 2008-present Sonatype, Inc.
@@ -11,10 +12,18 @@
 # Eclipse Foundation. All other trademarks are the property of their respective owners.
 #
 
-FROM docker-all.repo.sonatype.com/alpine/helm:3.9.3
+helm plugin install https://github.com/quintush/helm-unittest
 
-RUN apk update && apk upgrade && \
-    apk add --no-cache bash git openssh
+set -e
 
-RUN mkdir /.local /.cache && chmod 777 /.local /.cache
+# lint yaml of charts
+helm lint ./nxrm-aws-resiliency
+helm lint ./nexus-repository-manager
 
+# unit test
+(cd ./nxrm-aws-resiliency; helm unittest -3 -t junit -o test-output.xml .)
+(cd ./nexus-repository-manager; helm unittest -3 -t junit -o test-output.xml .)
+
+# package the charts into tgz archives
+helm package ./nxrm-aws-resiliency --destination docs
+helm package ./nexus-repository-manager --destination docs
