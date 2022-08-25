@@ -71,8 +71,8 @@ dockerizedBuildPipeline(
   },
   postDeploy: {
     // Create tags
-    String tagName = "${version}"
-    runSafely "git tag -a ${tagName} -m 'Release Update: ${version}'"
+    String tagName = "${chartVersion}"
+    runSafely "git tag -a ${tagName} -m 'Release Update: ${chartVersion}'"
     sshagent(credentials: [sonatypeZionCredentialsId()]) {
       runSafely "git push origin ${tagName}"
     }
