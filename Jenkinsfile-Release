@@ -88,10 +88,10 @@ dockerizedBuildPipeline(
     }
   },
   onSuccess: {
-    buildNotifications(currentBuild, env)
+    nxrmBuildNotifications(currentBuild, env)
   },
   onFailure: {
-    buildNotifications(currentBuild, env)
+    nxrmBuildNotifications(currentBuild, env)
   }
 )
 
