@@ -1,0 +1,6 @@
+﻿.vs/**
+.idea/**
+
+**/test-output.xml
+
+.DS_Store
