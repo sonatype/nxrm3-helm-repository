@@ -10,10 +10,10 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the Apache License Version 2.0 for the specific language governing permissions and limitations there under.
  */
-@Library(['private-pipeline-library', 'jenkins-shared', 'int-jenkins-shared']) _
+@Library(['private-pipeline-library', 'jenkins-shared', 'nxrm-jenkins-shared']) _
 
 final jira = [
-    versionPrefix: '', project: 'INT', projectId: '12410',
+    versionPrefix: '', project: 'NEXUS', projectId: '12410',
     credentialId : 'jenkins-jira', autoRelease: true, failOnError: true
 ]
 
@@ -36,11 +36,11 @@ properties([
     ),
     string(
       name: 'appVersion',
-      description: 'Version of the application image, like "1.139.0"',
+      description: 'Version of the application image, like "3.41.0"',
     ),
     string(
       name: 'chartVersion',
-      description: '(Optional) Version of the Chart, like "139.0.0". If omitted, it will be calculated from the appVersion.',
+      description: '(Optional) Version of the Chart, like "41.0.0". If omitted, it will be calculated from the appVersion.',
     ),
   ])
 ])
@@ -92,10 +92,10 @@ dockerizedBuildPipeline(
     }
   },
   onSuccess: {
-    buildNotifications(currentBuild, env, 'main')
+    buildNotifications(currentBuild, env)
   },
   onFailure: {
-    buildNotifications(currentBuild, env, 'main')
+    buildNotifications(currentBuild, env)
   }
 )
 

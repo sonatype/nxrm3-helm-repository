@@ -37,6 +37,5 @@ keywords:
 home: https://www.sonatype.com/nexus-repository-oss
 icon: https://sonatype.github.io/helm3-charts/NexusRepo_Vertical.svg
 maintainers:
-  - email:  support@sonatype.com
-    name: Sonatype
+  - name: Sonatype
 
