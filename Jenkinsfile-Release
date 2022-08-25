@@ -44,9 +44,6 @@ final chartVersion = calculateChartVersion(params.chartVersion, params.appVersio
 
 dockerizedBuildPipeline(
   prepare: {
-    if (! params.chart) {
-      error('Chart parameter is required.')
-    }
     if (! params.appVersion) {
       error('The appVersion is required.')
     }
