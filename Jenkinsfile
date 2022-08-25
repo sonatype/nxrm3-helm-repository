@@ -10,7 +10,7 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the Apache License Version 2.0 for the specific language governing permissions and limitations there under.
  */
-@Library(['private-pipeline-library', 'jenkins-shared', 'int-jenkins-shared']) _
+@Library(['private-pipeline-library', 'jenkins-shared', 'nxrm-jenkins-shared']) _
 
 dockerizedBuildPipeline(
   prepare: {
@@ -23,9 +23,9 @@ dockerizedBuildPipeline(
   archiveArtifacts: 'docs/*',
   testResults: ['**/test-output.xml'],
   onSuccess: {
-    buildNotifications(currentBuild, env, 'main')
+    buildNotifications(currentBuild, env)
   },
   onFailure: {
-    buildNotifications(currentBuild, env, 'main')
+    buildNotifications(currentBuild, env)
   }
 )
