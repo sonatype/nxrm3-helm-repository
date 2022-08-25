@@ -70,13 +70,6 @@ dockerizedBuildPipeline(
     }
   },
   postDeploy: {
-    // Verify Index.yaml
-    String version = verifyIndexYamlAndTarFile(params.chart)
-
-    // Set Jira Fix Version
-    jira.versionPrefix = jiraVersionMappings[chart]
-    jiraSetFixVersion(jira, version)
-
     // Create tags
     String tagName = "${chart}-${version}"
     runSafely "git tag -a ${tagName} -m 'Release Update: ${version}'"
