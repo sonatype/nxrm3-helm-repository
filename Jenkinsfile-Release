@@ -71,7 +71,7 @@ dockerizedBuildPipeline(
   },
   postDeploy: {
     // Create tags
-    String tagName = "$nexus-repository-manager-nxrm-aws-resiliency-${version}"
+    String tagName = "${version}"
     runSafely "git tag -a ${tagName} -m 'Release Update: ${version}'"
     sshagent(credentials: [sonatypeZionCredentialsId()]) {
       runSafely "git push origin ${tagName}"
