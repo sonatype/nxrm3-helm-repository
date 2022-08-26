@@ -63,11 +63,12 @@ You will also need to complete the steps below. See the referenced AWS documenta
 ---
 
 ## Deployment
-1. Pull the [nxrm-resiliency-aws-helmchart](https://github.com/sonatype/nxrm3-helm-repository/blob/main/aws-single-instance-resiliency/Chart.yaml).
+1. Add the sonatype repo to your helm:
+```helm repo add sonatype https://sonatype.github.io/helm3-charts/ ```   
 2. Ensure you have updated your values.yaml with appropriate values for your environment.
 3. Install the chart using the following:
   
-```helm install nxrm nexus/nxrm-aws-resiliency --values values.yaml```
+```helm install nxrm sonatype/nxrm-aws-resiliency -f values.yaml```
   
 3. Get the Nexus Repository link using the following:
   
