@@ -70,7 +70,7 @@ You will also need to complete the steps below. See the referenced AWS documenta
   
 ```helm install nxrm sonatype/nxrm-aws-resiliency -f values.yaml```
   
-3. Get the Nexus Repository link using the following:
+4. Get the Nexus Repository link using the following:
   
 ```kubectl get ingresses -n nexusrepo```
 
