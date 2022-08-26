@@ -26,7 +26,7 @@ spec:
   selector:
     app: nxrm
   ports:
-    - name: docker-connector
+    - name: docker-service
       protocol: {{ .Values.service.docker.protocol }}
       port: {{ .Values.service.docker.port }}
       targetPort: {{ .Values.service.docker.targetPort }}
