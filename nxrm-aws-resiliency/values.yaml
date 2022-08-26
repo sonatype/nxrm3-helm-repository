@@ -52,7 +52,6 @@ ingress:
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}]'
     alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-1:0000000000000:certificate/00000000-1111-2222-3333-444444444444  # The AWS Certificate Manager ARN for your HTTPS certificate    
   dockerIngress:  #Ingress for Docker Connector
-    #host: "docker.ingress.rule.host" #host to apply this ingress rule to. Uncomment this in your values.yaml and set it as you wish
     annotations:
       kubernetes.io/ingress.class: alb
       alb.ingress.kubernetes.io/scheme: internal # scheme
