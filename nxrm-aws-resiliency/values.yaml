@@ -5,7 +5,7 @@ namespaces:
   externaldnsNs: nexus-externaldns
 externaldns:
   domainFilter: example.com #your root domain e.g example.com
-  awsZoneType: private # only look at public hosted zones (valid values are public, private or no value for both)
+  awsZoneType: private # hosted zone to look at (valid values are public, private or no value for both)
 deployment:
   clusterRegion: us-east-1
   name: nxrm.deployment
