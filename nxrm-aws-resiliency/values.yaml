@@ -1,41 +1,49 @@
 # Declare variables to be passed into your templates.
 namespaces:
-    nexusNs: nexusrepo
-    cloudwatchNs: amazon-cloudwatch
+  nexusNs: nexusrepo
+  cloudwatchNs: amazon-cloudwatch
+  externaldnsNs: nexus-externaldns
+externaldns:
+  domainFilter: example.com #your root domain e.g example.com
 deployment:
-   name: nxrm.deployment
-   clusterName: nxrm-nexus
-   logsRegion: us-east-1
-   initContainer:
-        image:
-          repository: busybox
-          tag: 1.33.1
-   container:
-        image:
-          repository: sonatype/nexus3
-          tag: 3.41.1
-        containerPort: 8081
-        pullPolicy: IfNotPresent
-        env:
-          nexusDBName: nexus
-          nexusDBPort: 3306
-   requestLogContainer:
-        image:
-          repository: busybox
-          tag: 1.33.1
-   auditLogContainer:
-        image:
-          repository: busybox
-          tag: 1.33.1
-   taskLogContainer:
-        image:
-          repository: busybox
-          tag: 1.33.1
+  clusterRegion: us-east-1
+  name: nxrm.deployment
+  clusterName: nxrm-nexus
+  logsRegion: us-east-1
+  fluentBitVersion: 2.28.0
+  initContainer:
+    image:
+      repository: busybox
+      tag: 1.33.1
+  container:
+    image:
+      repository: sonatype/nexus3
+      tag: 3.41.1
+    containerPort: 8081
+    pullPolicy: IfNotPresent
+    env:
+      nexusDBName: nexus
+      nexusDBPort: 3306
+  requestLogContainer:
+    image:
+      repository: busybox
+      tag: 1.33.1
+  auditLogContainer:
+    image:
+      repository: busybox
+      tag: 1.33.1
+  taskLogContainer:
+    image:
+      repository: busybox
+      tag: 1.33.1
 serviceAccount:
-     name: nexus-repository-deployment-sa #This SA is created as part of steps under "AWS Secrets Manager"
-     role: arn:aws:iam::000000000000:role/nxrm-nexus-role #Role with secretsmanager permissions
+  name: nexus-repository-deployment-sa #This SA is created as part of steps under "AWS Secrets Manager"
+  role: arn:aws:iam::000000000000:role/nxrm-nexus-role #Role with secretsmanager permissions
+  externaldns:
+    name: external-dns
+    role: arn:aws:iam::000000000000:role/nexusrepo-external-dns-irsa-role #Role with route53 permissions needed by external-dns     
 ingress:
-  #host: "nexus.ingress.rule.host" #host to apply this ingress rule to. Uncomment this in your values.yaml and set it as you wish
+  #host: "example.com" #host to apply this ingress rule to. Uncomment this in your values.yaml and set it as you wish
   annotations:
     kubernetes.io/ingress.class: alb
     alb.ingress.kubernetes.io/scheme: internal # scheme
