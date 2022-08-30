@@ -48,4 +48,4 @@ spec:
               service:
                 name: {{ .Chart.Name }}-docker-service
                 port:
-                  number: {{ .Values.ingress.dockerIngress.port }}
+                  number: {{ .Values.service.docker.port }}

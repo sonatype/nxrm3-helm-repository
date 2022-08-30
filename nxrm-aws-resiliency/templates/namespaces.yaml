@@ -8,3 +8,8 @@ kind: Namespace
 metadata:
   name: {{ .Values.namespaces.cloudwatchNs }}
 ---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: {{ .Values.namespaces.externaldnsNs }}
+---
