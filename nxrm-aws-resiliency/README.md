@@ -66,6 +66,9 @@ You will also need to complete the steps below. See the referenced AWS documenta
 1. Add the sonatype repo to your helm:
 ```helm repo add sonatype https://sonatype.github.io/helm3-charts/ ```   
 2. Ensure you have updated your values.yaml with appropriate values for your environment.
+  - Note that you can specify Ingress annotations via the values.yaml. 
+  - If you wish to add [Labels](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/), you can do so via kubectl. See the [kubectl Cheat Sheet](https://kubernetes.io/docs/reference/kubectl/cheatsheet/) for specific commands.
+  
 3. Install the chart using the following:
   
 ```helm install nxrm sonatype/nxrm-aws-resiliency -f values.yaml```
