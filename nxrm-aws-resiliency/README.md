@@ -62,6 +62,98 @@ You will also need to complete the steps below. See the referenced AWS documenta
 
 ---
 
+## External-dns
+
+This helm chart uses external-dns: https://github.com/kubernetes-sigs/external-dns to create 'A' records in AWS Route 53 for our docker subdomain feature: https://help.sonatype.com/repomanager3/nexus-repository-administration/formats/docker-registry/docker-subdomain-connector
+
+See the ```external-dns.alpha.kubernetes.io/hostname``` annotation in the dockerIngress resource in the values.yaml
+
+### Permissions for external-dns
+
+Open a terminal which has connectivity to your EKS cluster and run the following commands:
+```
+
+cat <<'EOF' >> external-dns-r53-policy.json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "route53:ChangeResourceRecordSets"
+      ],
+      "Resource": [
+        "arn:aws:route53:::hostedzone/*"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "route53:ListHostedZones",
+        "route53:ListResourceRecordSets"
+      ],
+      "Resource": [
+        "*"
+      ]
+    }
+  ]
+}
+EOF
+
+
+aws iam create-policy --policy-name "AllowExternalDNSUpdates" --policy-document file://external-dns-r53-policy.json
+
+
+POLICY_ARN=$(aws iam list-policies --query 'Policies[?PolicyName==`AllowExternalDNSUpdates`].Arn' --output text)
+
+
+EKS_CLUSTER_NAME=<Your EKS Cluster Name>
+
+
+aws eks describe-cluster --name $EKS_CLUSTER_NAME --query "cluster.identity.oidc.issuer" --output text
+
+
+eksctl utils associate-iam-oidc-provider --cluster $EKS_CLUSTER_NAME --approve
+
+ACCOUNT_ID=$(aws sts get-caller-identity --query "Account" --output text)
+OIDC_PROVIDER=$(aws eks describe-cluster --name $EKS_CLUSTER_NAME --query "cluster.identity.oidc.issuer" --output text | sed -e 's|^https://||')
+```
+
+Note: this value you assign to the 'EXTERNALDNS_NS' variable below should be the same as the one you specify in your values.yaml for namespaces.externaldnsNs
+```
+EXTERNALDNS_NS=nexus-externaldns
+
+cat <<-EOF > externaldns-trust.json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "Federated": "arn:aws:iam::$ACCOUNT_ID:oidc-provider/$OIDC_PROVIDER"
+            },
+            "Action": "sts:AssumeRoleWithWebIdentity",
+            "Condition": {
+                "StringEquals": {
+                    "$OIDC_PROVIDER:sub": "system:serviceaccount:${EXTERNALDNS_NS}:external-dns",
+                    "$OIDC_PROVIDER:aud": "sts.amazonaws.com"
+                }
+            }
+        }
+    ]
+}
+EOF
+
+IRSA_ROLE="nexusrepo-external-dns-irsa-role"
+aws iam create-role --role-name $IRSA_ROLE --assume-role-policy-document file://externaldns-trust.json 
+aws iam attach-role-policy --role-name $IRSA_ROLE --policy-arn $POLICY_ARN
+
+ROLE_ARN=$(aws iam get-role --role-name $IRSA_ROLE --query Role.Arn --output text)
+echo $ROLE_ARN
+```
+
+2. Make a note of the ROLE_ARN outputted last above and specify it in your values.yaml for serviceAccount.externaldns.role
+
 ## Deployment
 1. Add the sonatype repo to your helm:
 ```helm repo add sonatype https://sonatype.github.io/helm3-charts/ ```   
