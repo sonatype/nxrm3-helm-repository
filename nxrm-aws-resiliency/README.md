@@ -64,13 +64,13 @@ You will also need to complete the steps below. See the referenced AWS documenta
 
 ## External-dns
 
-This helm chart uses external-dns: https://github.com/kubernetes-sigs/external-dns to create 'A' records in AWS Route 53 for our docker subdomain feature: https://help.sonatype.com/repomanager3/nexus-repository-administration/formats/docker-registry/docker-subdomain-connector
+This helm chart uses [external-dns] (https://github.com/kubernetes-sigs/external-dns) to create 'A' records in AWS Route 53 for our [Docker subdomain feature] (https://help.sonatype.com/repomanager3/nexus-repository-administration/formats/docker-registry/docker-subdomain-connector).
 
-See the ```external-dns.alpha.kubernetes.io/hostname``` annotation in the dockerIngress resource in the values.yaml
+See the ```external-dns.alpha.kubernetes.io/hostname``` annotation in the dockerIngress resource in the values.yaml.
 
 ### Permissions for external-dns
 
-Open a terminal which has connectivity to your EKS cluster and run the following commands:
+Open a terminal that has connectivity to your EKS cluster and run the following commands:
 ```
 
 cat <<'EOF' >> external-dns-r53-policy.json
@@ -119,7 +119,7 @@ ACCOUNT_ID=$(aws sts get-caller-identity --query "Account" --output text)
 OIDC_PROVIDER=$(aws eks describe-cluster --name $EKS_CLUSTER_NAME --query "cluster.identity.oidc.issuer" --output text | sed -e 's|^https://||')
 ```
 
-Note: this value you assign to the 'EXTERNALDNS_NS' variable below should be the same as the one you specify in your values.yaml for namespaces.externaldnsNs
+Note: The value you assign to the 'EXTERNALDNS_NS' variable below should be the same as the one you specify in your values.yaml for namespaces.externaldnsNs
 ```
 EXTERNALDNS_NS=nexus-externaldns
 
@@ -152,7 +152,7 @@ ROLE_ARN=$(aws iam get-role --role-name $IRSA_ROLE --query Role.Arn --output tex
 echo $ROLE_ARN
 ```
 
-2. Make a note of the ROLE_ARN outputted last above and specify it in your values.yaml for serviceAccount.externaldns.role
+2. Take note of the ROLE_ARN outputted last above and specify it in your values.yaml for serviceAccount.externaldns.role
 
 ## Deployment
 1. Add the sonatype repo to your helm:
