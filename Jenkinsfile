@@ -21,7 +21,7 @@ dockerizedBuildPipeline(
   },
   skipVulnerabilityScan: true,
   archiveArtifacts: 'docs/*',
-  testResults: ['**/test-output.xml'],
+//   testResults: ['**/test-output.xml'],
   onSuccess: {
     nxrmBuildNotifications(currentBuild, env)
   },
