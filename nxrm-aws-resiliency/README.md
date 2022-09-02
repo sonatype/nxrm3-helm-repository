@@ -64,7 +64,7 @@ You will also need to complete the steps below. See the referenced AWS documenta
 
 ## External-dns
 
-This helm chart uses [external-dns] (https://github.com/kubernetes-sigs/external-dns) to create 'A' records in AWS Route 53 for our [Docker subdomain feature] (https://help.sonatype.com/repomanager3/nexus-repository-administration/formats/docker-registry/docker-subdomain-connector).
+This helm chart uses [external-dns](https://github.com/kubernetes-sigs/external-dns) to create 'A' records in AWS Route 53 for our [Docker subdomain feature](https://help.sonatype.com/repomanager3/nexus-repository-administration/formats/docker-registry/docker-subdomain-connector).
 
 See the ```external-dns.alpha.kubernetes.io/hostname``` annotation in the dockerIngress resource in the values.yaml.
 
