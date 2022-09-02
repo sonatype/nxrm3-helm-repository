@@ -17,16 +17,6 @@ final jira = [
     credentialId : 'jenkins-jira', autoRelease: true, failOnError: true
 ]
 
-final jiraVersionMappings = [
-  'nexus-repository-manager': 'helm-nxrm',
-  'nxrm-aws-resiliency': 'helm-nxrm-aws-resiliency'
-]
-
-final chartLocation = [
-  'nexus-repository-manager': 'nexus-repository-manager',
-  'nxrm-aws-resiliency': 'nxrm-aws-resiliency'
-]
-
 properties([
   parameters([
     string(
@@ -52,10 +42,11 @@ dockerizedBuildPipeline(
   buildAndTest: {
     sonatypeZionGitConfig()
     runSafely "git checkout ${gitBranch(env)}"
-    runSafely "./upgrade.sh ./nexus-repository-manager ${chartVersion} ${params.appVersion}"
+    //runSafely "./upgrade.sh ./nexus-repository-manager ${chartVersion} ${params.appVersion}"
     runSafely "./upgrade.sh ./nxrm-aws-resiliency ${chartVersion} ${params.appVersion}"
-    runSafely './build.sh'    
-    runSafely 'git add nxrm-aws-resiliency nexus-repository-manager'
+    runSafely './build.sh'
+    runSafely 'git add nxrm-aws-resiliency'
+    //runSafely 'git add nexus-repository-manager'
   },
   skipVulnerabilityScan: true,
   archiveArtifacts: 'docs/*',
