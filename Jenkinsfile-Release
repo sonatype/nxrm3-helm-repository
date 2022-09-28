@@ -42,11 +42,11 @@ dockerizedBuildPipeline(
   buildAndTest: {
     sonatypeZionGitConfig()
     runSafely "git checkout ${gitBranch(env)}"
-    //runSafely "./upgrade.sh ./nexus-repository-manager ${chartVersion} ${params.appVersion}"
+    runSafely "./upgrade.sh ./nexus-repository-manager ${chartVersion} ${params.appVersion}"
     runSafely "./upgrade.sh ./nxrm-aws-resiliency ${chartVersion} ${params.appVersion}"
     runSafely './build.sh'
     runSafely 'git add nxrm-aws-resiliency'
-    //runSafely 'git add nexus-repository-manager'
+    runSafely 'git add nexus-repository-manager'
   },
   skipVulnerabilityScan: true,
   archiveArtifacts: 'docs/*',
