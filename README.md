@@ -22,7 +22,7 @@ See the [AWS Single-Instance Resiliency Chart](https://github.com/sonatype/nxrm3
 * Planning to configure a single Nexus Repository Pro instance within your Kubernetes/EKS cluster with two or more nodes spread across different AZs within an AWS region
 * Using an external PostgreSQL database (required)
 
-See the [Single-Instance OSS/Pro Kubernetes Chart](https://github.com/sonatype/helm3-charts/tree/main/charts/nexus-repository-manager) if you are doing the following:
+See the [Single-Instance OSS/Pro Kubernetes Chart](https://github.com/sonatype/nxrm3-helm-repository/tree/main/nexus-repository-manager) if you are doing the following:
 * Using embedded OrientDB (required)
 * Deploying either Nexus Repository Pro or OSS to an on-premises environment with bare metal/VM server (Node)
 * Deploying a single Nexus Repository instance within a Kubernetes cluster that has a single Node configured
