@@ -22,6 +22,7 @@ nexus:
     #     secretName: registry-secret
     #     annotations: {}
     #     ingressClassName: nginx-internal
+    #     hostPath:
   env:
     # minimum recommended memory settings for a small, person instance from
     # https://help.sonatype.com/repomanager3/product-information/system-requirements
