@@ -82,7 +82,7 @@ spec:
     - host: {{ $registry.host }}
       http:
         paths:
-          - path: /
+          - path: {{ $registry.hostPath | default "/" }}
             pathType: Prefix
             backend:
               service:
