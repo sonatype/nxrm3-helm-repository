@@ -25,7 +25,7 @@ deployment:
     env:
       nexusDBName: nexus
       nexusDBPort: 3306
-      install4jAddVmParams: "-Xms2703m -Xmx2703m -XX:MaxDirectMemorySize=2703m"
+      install4jAddVmParams: "-Xms2703m -Xmx2703m"
   requestLogContainer:
     image:
       repository: busybox
