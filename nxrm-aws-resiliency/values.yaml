@@ -25,6 +25,7 @@ deployment:
     env:
       nexusDBName: nexus
       nexusDBPort: 3306
+      install4jAddVmParams: "-Xms2703m -Xmx2703m"
   requestLogContainer:
     image:
       repository: busybox
