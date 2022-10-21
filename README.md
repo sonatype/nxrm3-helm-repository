@@ -12,6 +12,9 @@
     Eclipse Foundation. All other trademarks are the property of their respective owners.
 
 -->
+# ⚠️ Archive Notice
+
+As of October 24, 2023, we will no longer update or support the [Single-Instance OSS/Pro Kubernetes Chart](https://github.com/sonatype/nxrm3-helm-repository/tree/main/nexus-repository-manager).
 
 ## Helm Charts for Sonatype Nexus Repository Manager 3
 
