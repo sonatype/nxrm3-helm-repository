@@ -28,7 +28,9 @@ spec:
       {{- range .hosts }}
       - {{ . | quote }}
       {{- end }}
+      {{- if .secretName }}
       secretName: {{ .secretName }}
+      {{- end }}
     {{- end }}
   {{- end }}
   rules:
@@ -68,7 +70,9 @@ spec:
   tls:
     - hosts:
       - {{ $registry.host | quote }}
+      {{- if .secretName }}
       secretName: {{ $registry.secretName }}
+      {{- end }}
   rules:
     - host: {{ $registry.host }}
       http:
