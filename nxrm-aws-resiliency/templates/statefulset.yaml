@@ -1,12 +1,13 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
-  name: {{ .Chart.Name }}-{{ .Chart.Version }}.{{ .Release.Name }}-{{ .Values.deployment.name }}
+  name: {{ .Chart.Name }}-{{ .Chart.Version  | replace "." "-"}}-{{ .Release.Name }}-{{ .Values.statefulset.name }}
   namespace: {{ .Values.namespaces.nexusNs }}
   labels:
     app: nxrm
 spec:
-  replicas: 1
+  replicas: {{.Values.statefulset.replicaCount}}
+  serviceName: "{{ .Chart.Name }}-{{ .Chart.Version  | replace "." "-"}}-{{ .Release.Name }}-{{ .Values.statefulset.name }}"
   selector:
     matchLabels:
       app: nxrm
@@ -21,7 +22,7 @@ spec:
         # otherwise the side car containers will crash a couple of times and backoff whilst waiting
         # for nxrm-app to start and this increases the total start up time.
         - name: chown-nexusdata-owner-to-nexus-and-init-log-dir
-          image: {{ .Values.deployment.initContainer.image.repository }}:{{ .Values.deployment.initContainer.image.tag }}
+          image: {{ .Values.statefulset.initContainer.image.repository }}:{{ .Values.statefulset.initContainer.image.tag }}
           command: [/bin/sh]
           args:
             - -c
@@ -34,19 +35,20 @@ spec:
               touch -a /nexus-data/log/request.log &&
               chown -R '200:200' /nexus-data
           volumeMounts:
-            - name: nexusdata
+            - name: nexus-data
               mountPath: /nexus-data
+      terminationGracePeriodSeconds: 20
       containers:
         - name: nxrm-app
-          image: {{ .Values.deployment.container.image.repository }}:{{ .Values.deployment.container.image.tag }}
+          image: {{ .Values.statefulset.container.image.repository }}:{{ .Values.statefulset.container.image.tag }}
           securityContext:
             runAsUser: 200
-          imagePullPolicy: {{ .Values.deployment.container.pullPolicy }}
+          imagePullPolicy: {{ .Values.statefulset.container.pullPolicy }}
           ports:
-            - containerPort: {{ .Values.deployment.container.containerPort }}
+            - containerPort: {{ .Values.statefulset.container.containerPort }}
           env:
             - name: DB_NAME
-              value: "{{ .Values.deployment.container.env.nexusDBName }}"
+              value: "{{ .Values.statefulset.container.env.nexusDBName }}"
             - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
@@ -70,41 +72,39 @@ spec:
             - name: NEXUS_SECURITY_RANDOMPASSWORD
               value: "false"
             - name: INSTALL4J_ADD_VM_PARAMS
-              value: "{{ .Values.deployment.container.env.install4jAddVmParams }} -Dnexus.licenseFile=/nxrm-secrets/{{ .Values.secret.license.alias }} \
-          -Dnexus.datastore.enabled=true -Djava.util.prefs.userRoot=${NEXUS_DATA}/javaprefs \
-          -Dnexus.datastore.nexus.jdbcUrl=jdbc:postgresql://${DB_HOST}:{{ .Values.deployment.container.env.nexusDBPort }}/${DB_NAME} \
+              value: "{{ .Values.statefulset.container.env.install4jAddVmParams }} -Dnexus.licenseFile=/nxrm-secrets/{{ .Values.secret.license.alias }} \
+          -Dnexus.datastore.enabled=true -Djava.util.prefs.userRoot=${NEXUS_DATA}/javaprefs -Dnexus.datastore.clustered.enabled=${CLUSTERED_ENABLED} \
+          -Dnexus.datastore.table.search.enabled=${TABLE_SEARCH_ENABLED} -Dnexus.datastore.blobstore.metrics.enabled=${DATASTORE_BLOBSTORE_METRICS_ENABLED} -Dnexus.jwt.enabled=${JWT_ENABLED} \
+          -Dnexus.datastore.nexus.jdbcUrl=jdbc:postgresql://${DB_HOST}:{{ .Values.statefulset.container.env.nexusDBPort }}/${DB_NAME} \
           -Dnexus.datastore.nexus.username=${DB_USER} \
           -Dnexus.datastore.nexus.password=${DB_PASSWORD}"
           volumeMounts:
             - mountPath: /nxrm-secrets
               name: nxrm-secrets
-            - name: nexusdata
+            - name: nexus-data
               mountPath: /nexus-data
             - name: logback-tasklogfile-override
               mountPath: /nexus-data/etc/logback/logback-tasklogfile-appender-override.xml
               subPath: logback-tasklogfile-appender-override.xml
         - name: request-log
-          image: {{ .Values.deployment.requestLogContainer.image.repository }}:{{ .Values.deployment.requestLogContainer.image.tag }}
+          image: {{ .Values.statefulset.requestLogContainer.image.repository }}:{{ .Values.statefulset.requestLogContainer.image.tag }}
           args: [/bin/sh, -c, 'tail -n+1 -F /nexus-data/log/request.log']
           volumeMounts:
-            - name: nexusdata
+            - name: nexus-data
               mountPath: /nexus-data
         - name: audit-log
-          image: {{ .Values.deployment.auditLogContainer.image.repository }}:{{ .Values.deployment.auditLogContainer.image.tag }}
+          image: {{ .Values.statefulset.auditLogContainer.image.repository }}:{{ .Values.statefulset.auditLogContainer.image.tag }}
           args: [/bin/sh, -c, 'tail -n+1 -F /nexus-data/log/audit/audit.log']
           volumeMounts:
-            - name: nexusdata
+            - name: nexus-data
               mountPath: /nexus-data
         - name: tasks-log
-          image: {{ .Values.deployment.taskLogContainer.image.repository }}:{{ .Values.deployment.taskLogContainer.image.tag }}
+          image: {{ .Values.statefulset.taskLogContainer.image.repository }}:{{ .Values.statefulset.taskLogContainer.image.tag }}
           args: [/bin/sh, -c, 'tail -n+1 -F /nexus-data/log/tasks/allTasks.log']
           volumeMounts:
-            - name: nexusdata
+            - name: nexus-data
               mountPath: /nexus-data
       volumes:
-        - name: nexusdata
-          persistentVolumeClaim:
-            claimName: {{ .Chart.Name }}-{{ .Chart.Version }}.{{ .Release.Name }}-ebs-claim
         - name: nxrm-secrets
           csi:
             driver: secrets-store.csi.k8s.io
@@ -118,3 +118,12 @@ spec:
             items:
               - key: logback-tasklogfile-appender-override.xml
                 path: logback-tasklogfile-appender-override.xml
+  volumeClaimTemplates:
+  - metadata:
+      name: nexus-data
+    spec:
+      accessModes: [ "{{.Values.pvc.accessModes }}" ]
+      storageClassName: "{{ .Chart.Name }}-{{ .Chart.Version}}-{{ .Release.Name }}-ebs-storage"  
+      resources:
+        requests:
+          storage: {{.Values.pvc.storage }}
