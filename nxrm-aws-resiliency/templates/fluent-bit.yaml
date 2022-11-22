@@ -39,12 +39,12 @@ metadata:
   name: fluent-bit-cluster-info
   namespace: {{ .Values.namespaces.cloudwatchNs }}
 data:
-  cluster.name: {{ .Values.deployment.clusterName }}
+  cluster.name: {{ .Values.statefulset.clusterName }}
   http.server: "On"
   http.port: "2020"
   read.head: "Off"
   read.tail: "On"
-  logs.region: {{ .Values.deployment.logsRegion }}
+  logs.region: {{ .Values.statefulset.logsRegion }}
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -263,7 +263,7 @@ spec:
     spec:
       containers:
         - name: fluent-bit
-          image: amazon/aws-for-fluent-bit:{{ .Values.deployment.fluentBitVersion }}
+          image: amazon/aws-for-fluent-bit:{{ .Values.statefulset.fluentBitVersion }}
           imagePullPolicy: Always
           env:
             - name: AWS_REGION
