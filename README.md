@@ -22,8 +22,6 @@ If you are deploying in AWS, you can use our [AWS Helm chart](https://github.com
 
 We do not currently provide Helm charts for on-premises deployments using PostgreSQL. For those wishing to deploy on premises, see our [Single Data Center On-Premises Deployment Example Using Kubernetes documentation](https://help.sonatype.com/repomanager3/planning-your-implementation/resiliency-and-high-availability/single-data-center-on-premises-deployment-example-using-kubernetes) for information and sample YAMLs to help you plan a resilient on-premises deployment.
 
-[Installation and Upgrades Help Documentation](https://help.sonatype.com/repomanager3/installation-and-upgrades).
-
 ## Helm Charts for Sonatype Nexus Repository Manager 3
 
 We provide Helm charts for two different deployment scenarios:
