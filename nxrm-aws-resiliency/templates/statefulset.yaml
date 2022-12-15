@@ -118,11 +118,11 @@ spec:
               - key: logback-tasklogfile-appender-override.xml
                 path: logback-tasklogfile-appender-override.xml
   volumeClaimTemplates:
-  - metadata:
-      name: nexus-data
-    spec:
-      accessModes: [ "{{.Values.pvc.accessModes }}" ]
-      storageClassName: "{{ .Chart.Name }}-{{ .Chart.Version}}-{{ .Release.Name }}-ebs-storage"  
-      resources:
-        requests:
-          storage: {{.Values.pvc.storage }}
+    - metadata:
+        name: nexus-data
+      spec:
+        accessModes: [ "{{.Values.pvc.accessModes }}" ]
+        storageClassName: "{{ .Chart.Name }}-{{ .Chart.Version}}-{{ .Release.Name }}-ebs-storage"
+        resources:
+          requests:
+            storage: {{.Values.pvc.storage }}

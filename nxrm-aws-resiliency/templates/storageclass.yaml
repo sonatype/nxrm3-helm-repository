@@ -1,7 +1,7 @@
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
-  name: "{{ .Chart.Name }}-{{ .Chart.Version}}-{{ .Release.Name }}-ebs-storage" 
+  name: "{{ .Chart.Name }}-{{ .Chart.Version}}-{{ .Release.Name }}-ebs-storage"
   namespace: {{ .Values.namespaces.nexusNs }}
 provisioner: kubernetes.io/aws-ebs
 parameters:
