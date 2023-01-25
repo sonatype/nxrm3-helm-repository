@@ -16,7 +16,7 @@
 
 As of October 24, 2023, we will be making the following changes to this repository and the available helm charts:
 
-1. We will no longer update or support the the [Helm Chart for Single-Instance Kubernetes Deployments using OrientDB](https://github.com/sonatype/nxrm3-helm-repository/tree/main/nexus-repository-manager). This is because deploying Nexus Repository in containers with an embedded database has been known to corrupt the database under some circumstances. We strongly recommend that you use an external PostgreSQL database for Kubernetes deployments. 
+1. We will no longer update or support the [Helm Chart for Single-Instance Kubernetes Deployments using OrientDB](https://github.com/sonatype/nxrm3-helm-repository/tree/main/nexus-repository-manager). This is because deploying Nexus Repository in containers with an embedded database has been known to corrupt the database under some circumstances. We strongly recommend that you use an external PostgreSQL database for Kubernetes deployments. 
 2. There is not nor do we anticipate their being a Helm chart available for single-instance Kubernetes deployments using PostgreSQL. 
 3. The only Helm chart we will support is the [Helm Chart for Resilient AWS deployments using EKS](https://github.com/sonatype/nxrm3-helm-repository/tree/main/nxrm-aws-resiliency), which allows you to deploy Nexus Repository in an EKS cluster as described in our [resilient deployment options documentation](https://help.sonatype.com/repomanager3/planning-your-implementation/resiliency-and-high-availability/single-node-cloud-resilient-deployment-example-using-aws).
 
