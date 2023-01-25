@@ -14,13 +14,11 @@
 -->
 # ⚠️ Archive Notice
 
-As of October 24, 2023, we will no longer update or support the [Single-Instance OSS/Pro Helm Chart](https://github.com/sonatype/nxrm3-helm-repository/tree/main/nexus-repository-manager). 
+As of October 24, 2023, we will be making the following changes to this repository and the available helm charts:
 
-Deploying Nexus Repository in containers with an embedded database has been known to corrupt the database under some circumstances. We strongly recommend that you use an external PostgreSQL database for Kubernetes deployments. 
-
-If you are deploying in AWS, you can use our [AWS Helm chart](https://github.com/sonatype/nxrm3-helm-repository/tree/main/nxrm-aws-resiliency) to deploy Nexus Repository in an EKS cluster.
-
-We do not currently provide Helm charts for on-premises deployments using PostgreSQL. For those wishing to deploy on premises, see our [Single Data Center On-Premises Deployment Example Using Kubernetes documentation](https://help.sonatype.com/repomanager3/planning-your-implementation/resiliency-and-high-availability/single-data-center-on-premises-deployment-example-using-kubernetes) for information and sample YAMLs to help you plan a resilient on-premises deployment.
+1. We will no longer update or support the the [Helm Chart for Single-Instance Kubernetes Deployments using OrientDB](https://github.com/sonatype/nxrm3-helm-repository/tree/main/nexus-repository-manager). This is because deploying Nexus Repository in containers with an embedded database has been known to corrupt the database under some circumstances. We strongly recommend that you use an external PostgreSQL database for Kubernetes deployments. 
+2. There is not nor do we anticipate their being a Helm chart available for single-instance Kubernetes deployments using PostgreSQL. 
+3. The only Helm chart we will support is the [Helm Chart for Resilient AWS deployments using EKS](https://github.com/sonatype/nxrm3-helm-repository/tree/main/nxrm-aws-resiliency), which allows you to deploy Nexus Repository in an EKS cluster as described in our [resilient deployment options documentation](https://help.sonatype.com/repomanager3/planning-your-implementation/resiliency-and-high-availability/single-node-cloud-resilient-deployment-example-using-aws).
 
 ## Helm Charts for Sonatype Nexus Repository Manager 3
 
