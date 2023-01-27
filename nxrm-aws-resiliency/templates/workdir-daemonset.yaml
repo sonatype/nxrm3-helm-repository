@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
-  name:  {{ .Chart.Name }}-{{ .Chart.Version }}-{{ .Release.Name }}-create-nexus-work-dir
+  name:  {{ .Chart.Name }}-{{ .Chart.Version }}-{{ .Release.Name }}-create-nexus-work-dir | trunc 63 | trimSuffix "-"
   namespace: {{ .Values.namespaces.nexusNs }}
 spec:
   selector:
@@ -17,7 +17,7 @@ spec:
       initContainers:
         # Copy file for creating nexus work directory over and execute it on host 
         - name: create-nexus-work-dir
-          image: ubuntu:latest
+          image: ubuntu:23.04
           command: [/bin/sh]
           args:
             - -c
@@ -45,7 +45,7 @@ spec:
       volumes:
       - name: create-nexus-work-dir-script
         configMap:
-          name: {{ .Chart.Name }}-{{ .Chart.Version }}-{{ .Release.Name }}-create-nexus-workdir-config
+          name: {{ .Chart.Name }}-{{ .Chart.Version }}-{{ .Release.Name }}-create-nexus-workdir-config | trunc 63 | trimSuffix "-"
       - name: host-mnt
         hostPath:
           path: /tmp/install
