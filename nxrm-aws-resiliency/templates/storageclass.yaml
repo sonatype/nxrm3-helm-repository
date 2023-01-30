@@ -1,7 +1,11 @@
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
-  name: {{ .Chart.Name }}-{{ .Chart.Version }}.{{ .Release.Name }}-local-storage
+  name: "{{ .Chart.Name }}-{{ .Chart.Version}}-{{ .Release.Name }}-ebs-storage"
   namespace: {{ .Values.namespaces.nexusNs }}
-provisioner: kubernetes.io/no-provisioner
+provisioner: kubernetes.io/aws-ebs
+parameters:
+  type: io1
+  fsType: "ext4"
+  iopsPerGB: "{{ .Values.storageClass.iopsPerGB }}"
 volumeBindingMode: WaitForFirstConsumer

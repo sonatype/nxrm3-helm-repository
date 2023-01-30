@@ -6,9 +6,9 @@ namespaces:
 externaldns:
   domainFilter: example.com #your root domain e.g example.com
   awsZoneType: private # hosted zone to look at (valid values are public, private or no value for both)
-deployment:
+statefulset:
   clusterRegion: us-east-1
-  name: nxrm.deployment
+  name: nxrm-statefulset
   clusterName: nxrm-nexus
   logsRegion: us-east-1
   fluentBitVersion: 2.28.0
@@ -19,7 +19,7 @@ deployment:
   container:
     image:
       repository: sonatype/nexus3
-      tag: 3.41.1
+      tag: 3.44.0
     containerPort: 8081
     pullPolicy: IfNotPresent
     env:
@@ -43,7 +43,7 @@ serviceAccount:
   role: arn:aws:iam::000000000000:role/nxrm-nexus-role #Role with secretsmanager permissions
   externaldns:
     name: external-dns
-    role: arn:aws:iam::000000000000:role/nexusrepo-external-dns-irsa-role #Role with route53 permissions needed by external-dns     
+    role: arn:aws:iam::000000000000:role/nexusrepo-external-dns-irsa-role #Role with route53 permissions needed by external-dns
 ingress:
   #host: "example.com" #host to apply this ingress rule to. Uncomment this in your values.yaml and set it as you wish
   annotations:
@@ -51,7 +51,7 @@ ingress:
     alb.ingress.kubernetes.io/scheme: internal # scheme
     alb.ingress.kubernetes.io/subnets: subnet-1,subnet-2 #comma separated list of subnet ids
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}]'
-    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-1:0000000000000:certificate/00000000-1111-2222-3333-444444444444  # The AWS Certificate Manager ARN for your HTTPS certificate    
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-1:0000000000000:certificate/00000000-1111-2222-3333-444444444444  # The AWS Certificate Manager ARN for your HTTPS certificate
   dockerIngress:  #Ingress for Docker Connector - comment out if you don't use docker repositories
     annotations:
       kubernetes.io/ingress.class: alb # comment out if you don't use docker repositories
@@ -59,16 +59,13 @@ ingress:
       alb.ingress.kubernetes.io/subnets: subnet-1,subnet-2 #comma separated list of subnet ids, comment out if you don't use docker repositories
       alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}]' #comment out if you don't use docker repositories
       alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-1:0000000000000:certificate/00000000-1111-2222-3333-444444444444  # Comment out if you don't use docker repositories - The AWS Certificate Manager ARN for your HTTPS certificate
-      external-dns.alpha.kubernetes.io/hostname: dockerrepo1.example.com, dockerrepo2.example.com, dockerrepo3.example.com # Add more docker subdomains using dockerrepoName.example.com othereise comment out if you don't use docker repositories
-pv:
-  storage: 120Gi
-  volumeMode: Filesystem
-  accessModes: ReadWriteOnce
-  reclaimPolicy: Retain
-  path: /mnt
+      external-dns.alpha.kubernetes.io/hostname: dockerrepo1.example.com, dockerrepo2.example.com, dockerrepo3.example.com # Add more docker subdomains using dockerrepoName.example.com otherwise comment out if you don't use docker repositories
+storageClass:
   zones:
-    zone1: us-east-1a
-    zone2: us-east-1b
+    zone1: zone1
+    zone2: zone2
+    zone3: zone3
+  iopsPerGB: "10"
 pvc:
   accessModes: ReadWriteOnce
   storage: 100Gi

@@ -39,12 +39,12 @@ metadata:
   name: fluent-bit-cluster-info
   namespace: {{ .Values.namespaces.cloudwatchNs }}
 data:
-  cluster.name: {{ .Values.deployment.clusterName }}
+  cluster.name: {{ .Values.statefulset.clusterName }}
   http.server: "On"
   http.port: "2020"
   read.head: "Off"
   read.tail: "On"
-  logs.region: {{ .Values.deployment.logsRegion }}
+  logs.region: {{ .Values.statefulset.logsRegion }}
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -77,7 +77,7 @@ data:
     [INPUT]
         Name                tail
         Tag                 nexus.nexus-log
-        Path                /var/log/containers/{{ .Chart.Name }}-{{ .Chart.Version }}.{{ .Release.Name }}-nxrm.deployment*{{ .Values.namespaces.nexusNs }}_nxrm-app-*.log
+        Path                /var/log/containers/{{ .Chart.Name }}-{{ .Chart.Version  | replace "." "-" }}-{{ .Release.Name }}-{{ .Values.statefulset.name }}*{{ .Values.namespaces.nexusNs }}_nxrm-app-*.log
         Parser              docker
         DB                  /var/fluent-bit/state/flb_container.db
         Mem_Buf_Limit       5MB
@@ -112,7 +112,7 @@ data:
     [INPUT]
         Name                tail
         Tag                 nexus.request-log
-        Path                /var/log/containers/{{ .Chart.Name }}-{{ .Chart.Version }}.{{ .Release.Name }}-nxrm.deployment*{{ .Values.namespaces.nexusNs }}_request-log-*.log
+        Path                /var/log/containers/{{ .Chart.Name }}-{{ .Chart.Version  | replace "." "-" }}-{{ .Release.Name }}-{{ .Values.statefulset.name }}*{{ .Values.namespaces.nexusNs }}_request-log-*.log
         Parser              docker
         DB                  /var/fluent-bit/state/flb_container.db
         Mem_Buf_Limit       5MB
@@ -147,7 +147,7 @@ data:
     [INPUT]
         Name                tail
         Tag                 nexus.audit-log
-        Path                /var/log/containers/{{ .Chart.Name }}-{{ .Chart.Version }}.{{ .Release.Name }}-nxrm.deployment*{{ .Values.namespaces.nexusNs }}_audit-log-*.log
+        Path                /var/log/containers/{{ .Chart.Name }}-{{ .Chart.Version  | replace "." "-" }}-{{ .Release.Name }}-{{ .Values.statefulset.name }}*{{ .Values.namespaces.nexusNs }}_audit-log-*.log
         Parser              docker
         DB                  /var/fluent-bit/state/flb_container.db
         Mem_Buf_Limit       5MB
@@ -182,7 +182,7 @@ data:
     [INPUT]
         Name                tail
         Tag                 nexus.tasks-log
-        Path                /var/log/containers/{{ .Chart.Name }}-{{ .Chart.Version }}.{{ .Release.Name }}-nxrm.deployment*{{ .Values.namespaces.nexusNs }}_tasks-log-*.log
+        Path                /var/log/containers/{{ .Chart.Name }}-{{ .Chart.Version  | replace "." "-" }}-{{ .Release.Name }}-{{ .Values.statefulset.name }}*{{ .Values.namespaces.nexusNs }}_tasks-log-*.log
         Parser              docker
         DB                  /var/fluent-bit/state/flb_container.db
         Mem_Buf_Limit       5MB
@@ -263,7 +263,7 @@ spec:
     spec:
       containers:
         - name: fluent-bit
-          image: amazon/aws-for-fluent-bit:{{ .Values.deployment.fluentBitVersion }}
+          image: amazon/aws-for-fluent-bit:{{ .Values.statefulset.fluentBitVersion }}
           imagePullPolicy: Always
           env:
             - name: AWS_REGION
