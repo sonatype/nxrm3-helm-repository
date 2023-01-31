@@ -62,6 +62,11 @@ ingress:
 #      alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}]' #uncomment if you use docker repositories
 #      alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-1:0000000000000:certificate/00000000-1111-2222-3333-444444444444  #  Uncomment if you use docker repositories - The AWS Certificate Manager ARN for your HTTPS certificate
 #      external-dns.alpha.kubernetes.io/hostname: dockerrepo1.example.com, dockerrepo2.example.com, dockerrepo3.example.com # Add more docker subdomains using dockerrepoName.example.com othereise comment out if you don't use docker repositories
+workdir:
+  configmap:
+    name: create-nexus-workdir-config
+  daemonset:
+    name: create-nexus-work-dir
 storageClass:
   iopsPerGB: "10" #Note: aws plugin multiplies this by the size of the requested volumne to compute IOPS of the volumne and caps it a 20, 000 IOPS
 pv:

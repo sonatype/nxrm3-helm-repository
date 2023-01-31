@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
-  name:  {{ .Chart.Name }}-{{ .Chart.Version }}-{{ .Release.Name }}-create-nexus-work-dir | trunc 63 | trimSuffix "-"
+  name:  {{ .Values.workdir.daemonset.name }}
   namespace: {{ .Values.namespaces.nexusNs }}
 spec:
   selector:
@@ -45,7 +45,7 @@ spec:
       volumes:
       - name: create-nexus-work-dir-script
         configMap:
-          name: {{ .Chart.Name }}-{{ .Chart.Version }}-{{ .Release.Name }}-create-nexus-workdir-config | trunc 63 | trimSuffix "-"
+          name: {{ .Values.workdir.configmap.name }}
       - name: host-mnt
         hostPath:
           path: /tmp/install
