@@ -12,6 +12,7 @@ deployment:
   clusterName: nxrm-nexus
   logsRegion: us-east-1
   fluentBitVersion: 2.28.0
+  replicaCount: 1
   initContainer:
     image:
       repository: busybox
@@ -19,7 +20,7 @@ deployment:
   container:
     image:
       repository: sonatype/nexus3
-      tag: 3.41.1
+      tag: 3.45.1
     containerPort: 8081
     pullPolicy: IfNotPresent
     env:
@@ -48,27 +49,35 @@ ingress:
   #host: "example.com" #host to apply this ingress rule to. Uncomment this in your values.yaml and set it as you wish
   annotations:
     kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/healthcheck-path: /service/rest/v1/status
     alb.ingress.kubernetes.io/scheme: internal # scheme
     alb.ingress.kubernetes.io/subnets: subnet-1,subnet-2 #comma separated list of subnet ids
-    alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}]'
-    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-1:0000000000000:certificate/00000000-1111-2222-3333-444444444444  # The AWS Certificate Manager ARN for your HTTPS certificate    
+    #alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}]' uncomment for https
+    #alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-1:0000000000000:certificate/00000000-1111-2222-3333-444444444444  # Uncomment for https. The AWS Certificate Manager ARN for your HTTPS certificate    
   dockerIngress:  #Ingress for Docker Connector - comment out if you don't use docker repositories
     annotations:
       kubernetes.io/ingress.class: alb # comment out if you don't use docker repositories
       alb.ingress.kubernetes.io/scheme: internal # scheme comment out if you don't use docker repositories
       alb.ingress.kubernetes.io/subnets: subnet-1,subnet-2 #comma separated list of subnet ids, comment out if you don't use docker repositories
-      alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}]' #comment out if you don't use docker repositories
-      alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-1:0000000000000:certificate/00000000-1111-2222-3333-444444444444  # Comment out if you don't use docker repositories - The AWS Certificate Manager ARN for your HTTPS certificate
-      external-dns.alpha.kubernetes.io/hostname: dockerrepo1.example.com, dockerrepo2.example.com, dockerrepo3.example.com # Add more docker subdomains using dockerrepoName.example.com othereise comment out if you don't use docker repositories
+#      alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}]' #uncomment if you use docker repositories
+#      alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-1:0000000000000:certificate/00000000-1111-2222-3333-444444444444  #  Uncomment if you use docker repositories - The AWS Certificate Manager ARN for your HTTPS certificate
+#      external-dns.alpha.kubernetes.io/hostname: dockerrepo1.example.com, dockerrepo2.example.com, dockerrepo3.example.com # Add more docker subdomains using dockerrepoName.example.com othereise comment out if you don't use docker repositories
+workdir:
+  configmap:
+    name: create-nexus-workdir-config
+  daemonset:
+    name: create-nexus-work-dir
+storageClass:
+  iopsPerGB: "10" #Note: aws plugin multiplies this by the size of the requested volumne to compute IOPS of the volumne and caps it a 20, 000 IOPS
 pv:
   storage: 120Gi
   volumeMode: Filesystem
   accessModes: ReadWriteOnce
   reclaimPolicy: Retain
-  path: /mnt
+  path: /nexus-repo-mgr-work-dir/work
   zones:
-    zone1: us-east-1a
-    zone2: us-east-1b
+    - us-east-1a
+    - us-east-1b
 pvc:
   accessModes: ReadWriteOnce
   storage: 100Gi

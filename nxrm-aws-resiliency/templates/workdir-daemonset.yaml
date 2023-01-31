@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name:  {{ .Values.workdir.daemonset.name }}
+  namespace: {{ .Values.namespaces.nexusNs }}
+spec:
+  selector:
+    matchLabels:
+      job: dircreator
+  template:
+    metadata:
+      labels:
+        job: dircreator
+    spec:
+      hostPID: true
+      restartPolicy: Always
+      initContainers:
+        # Copy file for creating nexus work directory over and execute it on host 
+        - name: create-nexus-work-dir
+          image: ubuntu:23.04
+          command: [/bin/sh]
+          args:
+            - -c
+            - >-
+              cp /tmp/create-nexus-work-dir.sh /host-dir && 
+              /usr/bin/nsenter -m/proc/1/ns/mnt -- chmod u+x /tmp/install/create-nexus-work-dir.sh && 
+              /usr/bin/nsenter -m/proc/1/ns/mnt /tmp/install/create-nexus-work-dir.sh
+          securityContext:
+            privileged: true
+          volumeMounts:
+            - name: create-nexus-work-dir-script
+              mountPath: /tmp
+            - name: host-mnt
+              mountPath: /host-dir            
+      containers:
+      - name: directory-creator
+        image: busybox:1.33.1
+        command: ["/bin/sh"]
+        args:
+            - -c
+            - >-
+              tail -f /dev/null
+        securityContext:
+          privileged: true 
+      volumes:
+      - name: create-nexus-work-dir-script
+        configMap:
+          name: {{ .Values.workdir.configmap.name }}
+      - name: host-mnt
+        hostPath:
+          path: /tmp/install
