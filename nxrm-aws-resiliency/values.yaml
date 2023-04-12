@@ -3,9 +3,12 @@ namespaces:
   nexusNs: nexusrepo
   cloudwatchNs: amazon-cloudwatch
   externaldnsNs: nexus-externaldns
+fluentbit:
+  enabled: false
 externaldns:
   domainFilter: example.com #your root domain e.g example.com
   awsZoneType: private # hosted zone to look at (valid values are public, private or no value for both)
+  enabled: false
 deployment:
   clusterRegion: us-east-1
   name: nxrm.deployment
