@@ -67,11 +67,8 @@ spec:
             capabilities:
               drop:
                 - ALL
-          lifecycle:
-          {{- if .Values.deployment.postStart.command }}
-            postStart:
-              exec:
-                command: {{ .Values.deployment.postStart.command }}
+          {{- if .Values.deployment.lifecycle }}
+          lifecycle: {{ toYaml .Values.deployment.lifecycle | nindent 12 }}
           {{- end }}
           env:
             {{ toYaml .Values.nexus.env | nindent 12 }}
