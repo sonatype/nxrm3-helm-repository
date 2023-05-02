@@ -1,0 +1,38 @@
+{{- if and (.Values.metrics.enabled) (.Values.metrics.serviceMonitor.enabled) }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+{{ include "nexus.labels" . | indent 4 }}
+  {{- if .Values.nexus.extraLabels }}
+    {{- with .Values.nexus.extraLabels }}
+      {{ toYaml . | indent 4 }}
+    {{- end }}
+  {{- end }}
+  name: {{ template "nexus.fullname" . }}
+spec:
+  endpoints:
+  - basicAuth:
+      password:
+        name: {{ .Values.metrics.serviceMonitor.secret.name }}
+        key: {{ .Values.metrics.serviceMonitor.secret.passwordKey }}
+      username:
+        name: {{ .Values.metrics.serviceMonitor.secret.name }}
+        key: {{ .Values.metrics.serviceMonitor.secret.usernameKey }}
+    port: nexus-ui
+    path: /service/metrics/prometheus
+    {{- with .Values.metrics.serviceMonitor.interval }}
+    interval: {{ . }}
+    {{- end }}
+  namespaceSelector:
+    matchNames:
+      - {{ .Release.Namespace }}
+  selector:
+    matchLabels:
+      {{- include "nexus.selectorLabels" . | nindent 6 }}
+      {{- if .Values.nexus.extraSelectorLabels }}
+        {{- with .Values.nexus.extraSelectorLabels }}
+          {{ toYaml . | indent 6 }}
+        {{- end }}
+      {{- end }} 
+{{- end }}

@@ -118,7 +118,6 @@ ingress:
   #     hosts:
   #       - repo.demo
 
-
 service:
   name: nexus3
   enabled: true
@@ -182,3 +181,19 @@ serviceAccount:
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
   name: ""
+
+metrics:
+  enabled: true
+  serviceMonitor:
+    enabled: true
+    additionalLabels: {}
+    endpointConfig: {}
+    interval: 30s
+    secret:
+    # https://help.sonatype.com/repomanager3/nexus-repository-administration/support-features#SupportFeatures-Prometheus
+      name: nexus-monitoring
+      usernameKey: username
+      passwordKey: password
+  prometheusRules:
+    enabled: true 
+    rules: {}
