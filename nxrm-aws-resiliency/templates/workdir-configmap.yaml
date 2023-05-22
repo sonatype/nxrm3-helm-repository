@@ -1,11 +1,12 @@
+{{ if eq .Values.workdir.enabled true }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ .Values.workdir.configmap.name }}
-  namespace: {{ .Values.namespaces.nexusNs }}
+  namespace: {{ .Values.namespaces.nexusNamespace }}
 data:
    create-nexus-work-dir.sh: |
     #!/bin/bash
     # Make Nexus Repository Manager work directory
     mkdir -p /nexus-repo-mgr-work-dir/work
-
+{{- end }}

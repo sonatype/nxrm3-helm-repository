@@ -1,7 +1,9 @@
+{{ if eq .Values.storageClass.enabled true }}
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
   name: {{ .Chart.Name }}-{{ .Chart.Version }}.{{ .Release.Name }}-local-storage
-  namespace: {{ .Values.namespaces.nexusNs }}
+  namespace: {{ .Values.namespaces.nexusNamespace }}
 provisioner: kubernetes.io/no-provisioner
 volumeBindingMode: WaitForFirstConsumer
+{{- end }}

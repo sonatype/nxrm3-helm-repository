@@ -9,7 +9,7 @@ spec:
   accessModes:
   - {{ .Values.pv.accessModes }}
   persistentVolumeReclaimPolicy: {{ .Values.pv.reclaimPolicy }}
-  storageClassName: local-storage
+  storageClassName: {{ .Values.pv.storageClassName }}
   local:
     path: {{ .Values.pv.path }}
   nodeAffinity:

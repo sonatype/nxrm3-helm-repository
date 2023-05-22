@@ -2,7 +2,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: {{ .Chart.Name }}-{{ .Chart.Version }}.{{ .Release.Name }}-ebs-claim
-  namespace: {{ .Values.namespaces.nexusNs }}
+  namespace: {{ .Values.namespaces.nexusNamespace }}
 spec:
   accessModes:
     - {{ .Values.pvc.accessModes }}

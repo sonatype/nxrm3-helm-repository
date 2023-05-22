@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  namespace: {{ .Values.namespaces.nexusNs }}
+  namespace: {{ .Values.namespaces.nexusNamespace }}
   name: {{ .Chart.Name }}-{{ .Chart.Version }}.{{ .Release.Name }}-ingress
   {{- with .Values.ingress.annotations }}
   annotations:
@@ -27,7 +27,7 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  namespace: {{ .Values.namespaces.nexusNs }}
+  namespace: {{ .Values.namespaces.nexusNamespace }}
   name: {{ .Chart.Name }}-{{ .Chart.Version }}.{{ .Release.Name }}-ingress-nxrm-docker
   {{- with .Values.ingress.dockerIngress.annotations }}
   annotations:
