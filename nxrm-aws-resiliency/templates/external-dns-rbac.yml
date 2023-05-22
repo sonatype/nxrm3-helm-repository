@@ -1,9 +1,10 @@
+{{ if eq .Values.externalDns.enabled true }}
 # comment out sa if it was previously created
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: external-dns
-  namespace: {{ .Values.namespaces.externaldnsNs }}
+  namespace: {{ .Values.externalDns.namespace }}
   labels:
     app.kubernetes.io/name: external-dns
 rules:
@@ -18,7 +19,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: external-dns-viewer
-  namespace: {{ .Values.namespaces.externaldnsNs }}  
+  namespace: {{ .Values.externalDns.namespace }}  
   labels:
     app.kubernetes.io/name: external-dns
 roleRef:
@@ -27,14 +28,14 @@ roleRef:
   name: external-dns
 subjects:
   - kind: ServiceAccount
-    name: {{ .Values.serviceAccount.externaldns.name }}
-    namespace: {{ .Values.namespaces.externaldnsNs }}
+    name: {{ .Values.externalDns.serviceAccount.name }}
+    namespace: {{ .Values.externalDns.namespace }}
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: external-dns
-  namespace: {{ .Values.namespaces.externaldnsNs }}  
+  namespace: {{ .Values.externalDns.namespace }}  
   labels:
     app.kubernetes.io/name: external-dns
 spec:
@@ -64,3 +65,4 @@ spec:
           env:
             - name: AWS_DEFAULT_REGION
               value: {{ .Values.deployment.clusterRegion }}
+{{- end }}

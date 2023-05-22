@@ -1,8 +1,9 @@
+{{ if eq .Values.workdir.enabled true }}
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name:  {{ .Values.workdir.daemonset.name }}
-  namespace: {{ .Values.namespaces.nexusNs }}
+  namespace: {{ .Values.namespaces.nexusNamespace }}
 spec:
   selector:
     matchLabels:
@@ -49,3 +50,4 @@ spec:
       - name: host-mnt
         hostPath:
           path: /tmp/install
+{{- end }}

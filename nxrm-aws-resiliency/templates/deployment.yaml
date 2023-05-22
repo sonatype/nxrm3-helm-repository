@@ -2,11 +2,11 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ .Chart.Name }}-{{ .Chart.Version }}.{{ .Release.Name }}-{{ .Values.deployment.name }}
-  namespace: {{ .Values.namespaces.nexusNs }}
+  namespace: {{ .Values.namespaces.nexusNamespace }}
   labels:
     app: nxrm
 spec:
-  replicas: 1
+  replicas: {{ .Values.deployment.replicaCount }}
   selector:
     matchLabels:
       app: nxrm
@@ -14,6 +14,10 @@ spec:
     metadata:
       labels:
         app: nxrm
+{{ with .Values.deployment.annotations }}
+      annotations:
+{{ toYaml . | indent 8 }}
+{{- end }}
     spec:
       serviceAccountName: {{ .Values.serviceAccount.name }}
       initContainers:

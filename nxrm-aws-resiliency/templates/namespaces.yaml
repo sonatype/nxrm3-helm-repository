@@ -1,7 +1,8 @@
+{{ if eq .Values.namespaces.createNamespaces true }}
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: {{ .Values.namespaces.nexusNs }}
+  name: {{ .Values.namespaces.nexusNamespace }}
 ---
 apiVersion: v1
 kind: Namespace
@@ -13,3 +14,4 @@ kind: Namespace
 metadata:
   name: {{ .Values.namespaces.externaldnsNs }}
 ---
+{{- end }}

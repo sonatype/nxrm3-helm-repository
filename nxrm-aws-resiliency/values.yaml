@@ -1,11 +1,13 @@
 # Declare variables to be passed into your templates.
 namespaces:
-  nexusNs: nexusrepo
-  cloudwatchNs: amazon-cloudwatch
-  externaldnsNs: nexus-externaldns
+  createNamespaces: true # Creates namespace
+  nexusNamespace: nexusrepo
+
+
 externaldns:
   domainFilter: example.com #your root domain e.g example.com
   awsZoneType: private # hosted zone to look at (valid values are public, private or no value for both)
+
 deployment:
   clusterRegion: us-east-1
   name: nxrm.deployment
@@ -39,12 +41,12 @@ deployment:
     image:
       repository: busybox
       tag: 1.33.1
+  annotations: [] # Annotations to be added to pod template spec within the Deployment resource
+
 serviceAccount:
   name: nexus-repository-deployment-sa #This SA is created as part of steps under "AWS Secrets Manager"
   role: arn:aws:iam::000000000000:role/nxrm-nexus-role #Role with secretsmanager permissions
-  externaldns:
-    name: external-dns
-    role: arn:aws:iam::000000000000:role/nexusrepo-external-dns-irsa-role #Role with route53 permissions needed by external-dns     
+
 ingress:
   #host: "example.com" #host to apply this ingress rule to. Uncomment this in your values.yaml and set it as you wish
   annotations:
@@ -62,14 +64,20 @@ ingress:
 #      alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}]' #uncomment if you use docker repositories
 #      alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-1:0000000000000:certificate/00000000-1111-2222-3333-444444444444  #  Uncomment if you use docker repositories - The AWS Certificate Manager ARN for your HTTPS certificate
 #      external-dns.alpha.kubernetes.io/hostname: dockerrepo1.example.com, dockerrepo2.example.com, dockerrepo3.example.com # Add more docker subdomains using dockerrepoName.example.com othereise comment out if you don't use docker repositories
+
 workdir:
+  enabled: true
   configmap:
     name: create-nexus-workdir-config
   daemonset:
     name: create-nexus-work-dir
+
 storageClass:
+  enabled: true
   iopsPerGB: "10" #Note: aws plugin multiplies this by the size of the requested volumne to compute IOPS of the volumne and caps it a 20, 000 IOPS
+
 pv:
+  storageClassName: local-storage
   storage: 120Gi
   volumeMode: Filesystem
   accessModes: ReadWriteOnce
@@ -78,6 +86,7 @@ pv:
   zones:
     - us-east-1a
     - us-east-1b
+
 pvc:
   accessModes: ReadWriteOnce
   storage: 100Gi
@@ -93,6 +102,7 @@ service:  #Nexus Repo NodePort Service
    protocol: TCP
    port: 9090
    targetPort: 8081
+
 secret:
   license:
    arn: arn:aws:secretsmanager:us-east-1:000000000000:secret:nxrm-nexus-license
@@ -101,3 +111,14 @@ secret:
     arn: arn:aws:secretsmanager:us-east-1:000000000000:secret:nxrmrds-cred-nexus
   adminpassword:
     arn: arn:aws:secretsmanager:us-east-1:000000000000:secret:admin-nxrm-password
+
+fluentBit:
+  enabled: true
+  namespace: amazon-cloudwatch
+
+externalDns:
+  enabled: true # Enables externalDns resources
+  namespace: nexus-externaldns # Sets the namespace for the externalDns resources
+  serviceAccount:
+    name: external-dns
+    role: arn:aws:iam::000000000000:role/nexusrepo-external-dns-irsa-role #Role with route53 permissions needed by external-dns     
