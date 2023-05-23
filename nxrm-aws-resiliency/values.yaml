@@ -4,8 +4,11 @@ namespaces:
   cloudwatchNs: amazon-cloudwatch
   externaldnsNs: nexus-externaldns
 externaldns:
+  enabled: false
   domainFilter: example.com #your root domain e.g example.com
   awsZoneType: private # hosted zone to look at (valid values are public, private or no value for both)
+fluentbit:
+  enabled: false
 deployment:
   clusterRegion: us-east-1
   name: nxrm.deployment
@@ -54,7 +57,8 @@ ingress:
     alb.ingress.kubernetes.io/subnets: subnet-1,subnet-2 #comma separated list of subnet ids
     #alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}]' uncomment for https
     #alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-1:0000000000000:certificate/00000000-1111-2222-3333-444444444444  # Uncomment for https. The AWS Certificate Manager ARN for your HTTPS certificate    
-  dockerIngress:  #Ingress for Docker Connector - comment out if you don't use docker repositories
+  dockerIngress: #Ingress for Docker Connector - comment out if you don't use docker repositories
+    enabled: false
     annotations:
       kubernetes.io/ingress.class: alb # comment out if you don't use docker repositories
       alb.ingress.kubernetes.io/scheme: internal # scheme comment out if you don't use docker repositories
@@ -82,21 +86,22 @@ pvc:
   accessModes: ReadWriteOnce
   storage: 100Gi
 
-service:  #Nexus Repo NodePort Service
+service: #Nexus Repo NodePort Service
   nexus:
-   type: NodePort
-   protocol: TCP
-   port: 80
-   targetPort: 8081
-  docker:  #Nodeport Service for Docker Service
-   type: NodePort
-   protocol: TCP
-   port: 9090
-   targetPort: 8081
+    type: NodePort
+    protocol: TCP
+    port: 80
+    targetPort: 8081
+  docker: #Nodeport Service for Docker Service
+    enabled: false
+    type: NodePort
+    protocol: TCP
+    port: 9090
+    targetPort: 8081
 secret:
   license:
-   arn: arn:aws:secretsmanager:us-east-1:000000000000:secret:nxrm-nexus-license
-   alias: nxrm-license.lic
+    arn: arn:aws:secretsmanager:us-east-1:000000000000:secret:nxrm-nexus-license
+    alias: nxrm-license.lic
   rds:
     arn: arn:aws:secretsmanager:us-east-1:000000000000:secret:nxrmrds-cred-nexus
   adminpassword:
