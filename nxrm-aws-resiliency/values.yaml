@@ -80,8 +80,8 @@ pv:
   reclaimPolicy: Retain
   path: /nexus-repo-mgr-work-dir/work
   zones:
-    - us-east-1a
-    - us-east-1b
+    zone1: us-east-1a
+    zone2: us-east-1b
 pvc:
   accessModes: ReadWriteOnce
   storage: 100Gi
