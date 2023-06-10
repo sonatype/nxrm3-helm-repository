@@ -17,7 +17,7 @@ spec:
       initContainers:
         # Copy file for creating nexus work directory over and execute it on host 
         - name: create-nexus-work-dir
-          image: ubuntu:23.04
+          image: {{ .Values.workdir.daemonset.initContainer.image.repository }}:{{ .Values.workdir.daemonset.initContainer.image.tag }}
           command: [/bin/sh]
           args:
             - -c
@@ -34,7 +34,7 @@ spec:
               mountPath: /host-dir            
       containers:
       - name: directory-creator
-        image: busybox:1.33.1
+        image: {{ .Values.workdir.daemonset.container.image.repository }}:{{ .Values.workdir.daemonset.container.image.tag }}
         command: ["/bin/sh"]
         args:
             - -c

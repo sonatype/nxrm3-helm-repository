@@ -7,14 +7,20 @@ externaldns:
   enabled: false
   domainFilter: example.com #your root domain e.g example.com
   awsZoneType: private # hosted zone to look at (valid values are public, private or no value for both)
+  image:
+    repository: k8s.gcr.io/external-dns/external-dns
+    tag: v0.11.0
 fluentbit:
   enabled: false
+  container:
+    image:
+      repository: amazon/aws-for-fluent-bit
+      tag: 2.28.0
 deployment:
   clusterRegion: us-east-1
   name: nxrm.deployment
   clusterName: nxrm-nexus
   logsRegion: us-east-1
-  fluentBitVersion: 2.28.0
   replicaCount: 1
   initContainer:
     image:
@@ -71,6 +77,14 @@ workdir:
     name: create-nexus-workdir-config
   daemonset:
     name: create-nexus-work-dir
+    initContainer:
+      image:
+        repository: ubuntu
+        tag: 23.04
+    container:
+      image:
+        repository: busybox
+        tag: 1.33.1
 storageClass:
   iopsPerGB: "10" #Note: aws plugin multiplies this by the size of the requested volumne to compute IOPS of the volumne and caps it a 20, 000 IOPS
 pv:
