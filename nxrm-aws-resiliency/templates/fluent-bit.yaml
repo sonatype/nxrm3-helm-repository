@@ -264,7 +264,7 @@ spec:
     spec:
       containers:
         - name: fluent-bit
-          image: amazon/aws-for-fluent-bit:{{ .Values.deployment.fluentBitVersion }}
+          image: {{ .Values.fluentbit.container.image.repository }}:{{ .Values.fluentbit.container.image.tag }}
           imagePullPolicy: Always
           env:
             - name: AWS_REGION
