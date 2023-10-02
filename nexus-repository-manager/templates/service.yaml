@@ -10,6 +10,9 @@ metadata:
 {{- end }}
   labels:
     {{- include "nexus.labels" . | nindent 4 }}
+    {{- if .Values.service.labels }}
+      {{ toYaml .Values.service.labels | indent 4 }}
+    {{- end }}
     {{- if .Values.nexus.extraLabels }}
       {{- with .Values.nexus.extraLabels }}
         {{ toYaml . | indent 4 }}
@@ -42,6 +45,9 @@ metadata:
 {{- end }}
   labels:
     {{- include "nexus.labels" $ | nindent 4 }}
+    {{- if $registry.labels }}
+      {{ toYaml $registry.labels | indent 4 }}
+    {{- end }}
     {{- if $.Values.nexus.extraLabels }}
       {{- with $.Values.nexus.extraLabels }}
         {{ toYaml . | indent 4 }}
