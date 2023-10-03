@@ -10,7 +10,7 @@ metadata:
 {{- end }}
   labels:
     {{- include "nexus.labels" . | nindent 4 }}
-    {{- if .Values.service.labels -}}
+    {{- if .Values.service.labels }}
       {{ toYaml .Values.service.labels | nindent 4 }}
     {{- end }}
     {{- if .Values.nexus.extraLabels }}
@@ -45,7 +45,7 @@ metadata:
 {{- end }}
   labels:
     {{- include "nexus.labels" $ | nindent 4 }}
-    {{- if $registry.labels -}}
+    {{- if $registry.labels }}
       {{ toYaml $registry.labels | nindent 4 }}
     {{- end }}
     {{- if $.Values.nexus.extraLabels }}
