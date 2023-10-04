@@ -20,6 +20,7 @@ nexus:
     #   - host: chart.local
     #     port: 5000
     #     secretName: registry-secret
+    #     labels: {}
   env:
     # minimum recommended memory settings for a small, person instance from
     # https://help.sonatype.com/repomanager3/product-information/system-requirements
