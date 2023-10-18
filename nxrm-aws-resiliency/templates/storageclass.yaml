@@ -1,7 +1,9 @@
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
-  name: {{ .Chart.Name }}-{{ .Chart.Version }}.{{ .Release.Name }}-local-storage
+  name: {{ include "nxrm-aws-resiliency.fullname" . }}-local-storage
   namespace: {{ .Values.namespaces.nexusNs }}
+  labels:
+    {{- include "nxrm-aws-resiliency.labels" . | nindent 4 }}
 provisioner: kubernetes.io/no-provisioner
 volumeBindingMode: WaitForFirstConsumer
