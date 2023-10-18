@@ -116,17 +116,17 @@ spec:
       volumes:
         - name: nexusdata
           persistentVolumeClaim:
-            claimName: {{ .Chart.Name }}-{{ .Chart.Version }}.{{ .Release.Name }}-ebs-claim
+            claimName: {{ include "nxrm-aws-resiliency.fullname" . }}
         - name: nxrm-secrets
           csi:
             driver: secrets-store.csi.k8s.io
             readOnly: true
             volumeAttributes:
-              secretProviderClass: {{ .Chart.Name }}-{{ .Chart.Version }}.{{ .Release.Name }}-secret
+              secretProviderClass: {{ include "nxrm-aws-resiliency.fullname" . }}
               fsType: ext4
         - name: logback-tasklogfile-override
           configMap:
-            name: {{ .Chart.Name }}-{{ .Chart.Version }}.{{ .Release.Name }}-logback-tasklogfile-override
+            name: {{ include "nxrm-aws-resiliency.fullname" . }}
             items:
               - key: logback-tasklogfile-appender-override.xml
                 path: logback-tasklogfile-appender-override.xml

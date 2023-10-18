@@ -1,8 +1,10 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ .Chart.Name }}-{{ .Chart.Version }}.{{ .Release.Name }}-logback-tasklogfile-override
+  name: {{ include "nxrm-aws-resiliency.fullname" . }}
   namespace: {{ .Values.namespaces.nexusNs }}
+  labels:
+    {{- include "nxrm-aws-resiliency.labels" . | nindent 4 }}
 data:
   logback-tasklogfile-appender-override.xml: |
     <included>
