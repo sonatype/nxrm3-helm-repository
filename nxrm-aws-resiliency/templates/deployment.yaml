@@ -1,20 +1,28 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Chart.Name }}-{{ .Chart.Version }}.{{ .Release.Name }}-{{ .Values.deployment.name }}
+  name: {{ include "nxrm-aws-resiliency.fullname" . }}
   namespace: {{ .Values.namespaces.nexusNs }}
   labels:
-    app: nxrm
+    {{- include "nxrm-aws-resiliency.labels" . | nindent 4 }}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: nxrm
+      {{- include "nxrm-aws-resiliency.selectorLabels" . | nindent 6 }}
   template:
     metadata:
+      annotations:
+      {{- with .Values.deployment.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       labels:
-        app: nxrm
+        {{- include "nxrm-aws-resiliency.labels" . | nindent 8 }}
     spec:
+      {{- with .Values.deployment.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       serviceAccountName: {{ .Values.serviceAccount.name }}
       initContainers:
         # chown nexus-data to 'nexus' user and init log directories/files for a new pod
@@ -40,8 +48,10 @@ spec:
         - name: nxrm-app
           image: {{ .Values.deployment.container.image.repository }}:{{ .Values.deployment.container.image.tag }}
           securityContext:
-            runAsUser: 200
+            {{- toYaml .Values.deployment.securityContext | nindent 12 }}
           imagePullPolicy: {{ .Values.deployment.container.pullPolicy }}
+          resources:
+            {{- toYaml .Values.deployment.resources | nindent 12 }}
           ports:
             - containerPort: {{ .Values.deployment.container.containerPort }}
           env:
@@ -70,11 +80,14 @@ spec:
             - name: NEXUS_SECURITY_RANDOMPASSWORD
               value: "false"
             - name: INSTALL4J_ADD_VM_PARAMS
-              value: "{{ .Values.deployment.container.env.install4jAddVmParams }} -Dnexus.licenseFile=/nxrm-secrets/{{ .Values.secret.license.alias }} \
-          -Dnexus.datastore.enabled=true -Djava.util.prefs.userRoot=${NEXUS_DATA}/javaprefs \
-          -Dnexus.datastore.nexus.jdbcUrl=jdbc:postgresql://${DB_HOST}:{{ .Values.deployment.container.env.nexusDBPort }}/${DB_NAME} \
-          -Dnexus.datastore.nexus.username=${DB_USER} \
-          -Dnexus.datastore.nexus.password=${DB_PASSWORD}"
+              value: >-
+                {{ .Values.deployment.container.env.install4jAddVmParams }} 
+                -Dnexus.licenseFile=/nxrm-secrets/{{ .Values.secret.license.alias }}
+                -Dnexus.datastore.enabled=true
+                -Djava.util.prefs.userRoot=${NEXUS_DATA}/javaprefs
+                -Dnexus.datastore.nexus.jdbcUrl=jdbc:postgresql://${DB_HOST}:{{ .Values.deployment.container.env.nexusDBPort }}/${DB_NAME}
+                -Dnexus.datastore.nexus.username=${DB_USER}
+                -Dnexus.datastore.nexus.password=${DB_PASSWORD}
           volumeMounts:
             - mountPath: /nxrm-secrets
               name: nxrm-secrets
@@ -104,17 +117,29 @@ spec:
       volumes:
         - name: nexusdata
           persistentVolumeClaim:
-            claimName: {{ .Chart.Name }}-{{ .Chart.Version }}.{{ .Release.Name }}-ebs-claim
+            claimName: {{ include "nxrm-aws-resiliency.fullname" . }}
         - name: nxrm-secrets
           csi:
             driver: secrets-store.csi.k8s.io
             readOnly: true
             volumeAttributes:
-              secretProviderClass: {{ .Chart.Name }}-{{ .Chart.Version }}.{{ .Release.Name }}-secret
+              secretProviderClass: {{ include "nxrm-aws-resiliency.fullname" . }}
               fsType: ext4
         - name: logback-tasklogfile-override
           configMap:
-            name: {{ .Chart.Name }}-{{ .Chart.Version }}.{{ .Release.Name }}-logback-tasklogfile-override
+            name: {{ include "nxrm-aws-resiliency.fullname" . }}
             items:
               - key: logback-tasklogfile-appender-override.xml
                 path: logback-tasklogfile-appender-override.xml
+      {{- with .Values.deployment.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.deployment.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.deployment.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

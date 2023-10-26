@@ -1,12 +1,14 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ .Chart.Name }}-{{ .Chart.Version }}.{{ .Release.Name }}-ebs-claim
+  name: {{ include "nxrm-aws-resiliency.fullname" . }}
   namespace: {{ .Values.namespaces.nexusNs }}
+  labels:
+    {{- include "nxrm-aws-resiliency.labels" . | nindent 4 }}
 spec:
   accessModes:
     - {{ .Values.pvc.accessModes }}
-  storageClassName: local-storage
+  storageClassName: {{ include "nxrm-aws-resiliency.fullname" . }}-local-storage
   resources:
     requests:
       storage: {{ .Values.pvc.storage }}

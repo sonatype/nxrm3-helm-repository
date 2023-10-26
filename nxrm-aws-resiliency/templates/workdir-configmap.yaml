@@ -3,6 +3,8 @@ kind: ConfigMap
 metadata:
   name: {{ .Values.workdir.configmap.name }}
   namespace: {{ .Values.namespaces.nexusNs }}
+  labels:
+    {{- include "nxrm-aws-resiliency.labels" . | nindent 4 }}
 data:
    create-nexus-work-dir.sh: |
     #!/bin/bash

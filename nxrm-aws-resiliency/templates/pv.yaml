@@ -1,7 +1,9 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: {{ .Chart.Name }}-{{ .Chart.Version }}.{{ .Release.Name }}-ebs-pv
+  name: {{ include "nxrm-aws-resiliency.fullname" . }}
+  labels:
+    {{- include "nxrm-aws-resiliency.labels" . | nindent 4 }}
 spec:
   capacity:
     storage: {{ .Values.pv.storage }}
@@ -9,7 +11,7 @@ spec:
   accessModes:
   - {{ .Values.pv.accessModes }}
   persistentVolumeReclaimPolicy: {{ .Values.pv.reclaimPolicy }}
-  storageClassName: local-storage
+  storageClassName: {{ include "nxrm-aws-resiliency.fullname" . }}-local-storage
   local:
     path: {{ .Values.pv.path }}
   nodeAffinity:
@@ -22,7 +24,3 @@ spec:
           {{- range $zone  := .Values.pv.zones }}
           - {{ $zone }} 
           {{- end }}  
-
-          
-          
-         
