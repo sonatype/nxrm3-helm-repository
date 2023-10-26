@@ -8,7 +8,7 @@ metadata:
 spec:
   accessModes:
     - {{ .Values.pvc.accessModes }}
-  storageClassName: local-storage
+  storageClassName: {{ include "nxrm-aws-resiliency.fullname" . }}-local-storage
   resources:
     requests:
       storage: {{ .Values.pvc.storage }}

@@ -12,12 +12,12 @@ spec:
       {{- include "nxrm-aws-resiliency.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-      {{- with .Values.deployment.podAnnotations }}
       annotations:
+      {{- with .Values.deployment.podAnnotations }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "nxrm-aws-resiliency.selectorLabels" . | nindent 8 }}
+        {{- include "nxrm-aws-resiliency.labels" . | nindent 8 }}
     spec:
       {{- with .Values.deployment.imagePullSecrets }}
       imagePullSecrets:
@@ -83,7 +83,8 @@ spec:
               value: >-
                 {{ .Values.deployment.container.env.install4jAddVmParams }} 
                 -Dnexus.licenseFile=/nxrm-secrets/{{ .Values.secret.license.alias }}
-                -Dnexus.datastore.enabled=true -Djava.util.prefs.userRoot=${NEXUS_DATA}/javaprefs
+                -Dnexus.datastore.enabled=true
+                -Djava.util.prefs.userRoot=${NEXUS_DATA}/javaprefs
                 -Dnexus.datastore.nexus.jdbcUrl=jdbc:postgresql://${DB_HOST}:{{ .Values.deployment.container.env.nexusDBPort }}/${DB_NAME}
                 -Dnexus.datastore.nexus.username=${DB_USER}
                 -Dnexus.datastore.nexus.password=${DB_PASSWORD}

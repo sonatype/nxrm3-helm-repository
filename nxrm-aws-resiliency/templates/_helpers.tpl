@@ -36,9 +36,7 @@ Common labels
 {{- define "nxrm-aws-resiliency.labels" -}}
 helm.sh/chart: {{ include "nxrm-aws-resiliency.chart" . }}
 {{ include "nxrm-aws-resiliency.selectorLabels" . }}
-{{- if .Chart.AppVersion }}
-app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
-{{- end }}
+app.kubernetes.io/version: {{ include "nxrm-aws-resiliency.appVersion" . | quote }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 app: nxrm
 {{- end }}
@@ -52,12 +50,9 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
-Create the name of the service account to use
+Declare a version for the release, Chart version or image tag (strip SHAs from tags)
+This can still trip the > 63 char limit...
 */}}
-{{- define "nxrm-aws-resiliency.serviceAccountName" -}}
-{{- if .Values.serviceAccount.create }}
-{{- default (include "nxrm-aws-resiliency.fullname" .) .Values.serviceAccount.name }}
-{{- else }}
-{{- default "default" .Values.serviceAccount.name }}
-{{- end }}
+{{- define "nxrm-aws-resiliency.appVersion" -}}
+{{- regexReplaceAll "@sha256:.*" (default .Chart.AppVersion .Values.deployment.container.image.tag) "" }}
 {{- end }}
