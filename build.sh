@@ -18,12 +18,9 @@ set -e
 
 # lint yaml of charts
 helm lint ./nxrm-aws-resiliency
-helm lint ./nexus-repository-manager
 
 # unit test
 (cd ./nxrm-aws-resiliency; helm unittest -3 -t junit -o test-output.xml .)
-(cd ./nexus-repository-manager; helm unittest -3 -t junit -o test-output.xml .)
 
 # package the charts into tgz archives
 helm package ./nxrm-aws-resiliency --destination docs
-helm package ./nexus-repository-manager --destination docs
