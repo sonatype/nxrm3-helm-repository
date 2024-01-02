@@ -57,12 +57,21 @@ metadata:
         {{ toYaml . | indent 4 }}
       {{- end }}
     {{- end }}
-    {{- with $.Values.ingress.annotations }}
+    {{- if $registry.annotations }}
+      {{- with $registry.annotations }}
   annotations:
-      {{- toYaml . | nindent 4 }}
+        {{- toYaml . | nindent 4 }}
+      {{- end }}
+    {{- else }}
+      {{- with $.Values.ingress.annotations }}
+  annotations:
+        {{- toYaml . | nindent 4 }}
+      {{- end }}
     {{- end }}
 spec:
-  {{- if $.Values.ingress.ingressClassName }}
+  {{- if $registry.ingressClassName }}
+  ingressClassName: {{ $registry.ingressClassName }}
+  {{- else if $.Values.ingress.ingressClassName }}
   ingressClassName: {{ $.Values.ingress.ingressClassName }}
   {{- end }}
   tls:
@@ -73,7 +82,7 @@ spec:
     - host: {{ $registry.host }}
       http:
         paths:
-          - path: /
+          - path: {{ $registry.hostPath | default "/" }}
             pathType: Prefix
             backend:
               service:
