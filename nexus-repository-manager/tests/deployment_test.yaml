@@ -51,7 +51,7 @@ tests:
           path: spec.template.spec.containers[0].env
           value:
             - name: INSTALL4J_ADD_VM_PARAMS
-              value: |-
+              value: >-
                 -Xms2703M -Xmx2703M
                 -XX:MaxDirectMemorySize=2703M
                 -XX:+UnlockExperimentalVMOptions
