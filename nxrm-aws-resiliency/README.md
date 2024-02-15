@@ -19,7 +19,13 @@ As of February 9, 2024, we now provide one [HA/Resiliency Helm Chart](https://gi
 # Helm Chart Instructions
 
 See the [HA/Resiliency Helm Chart in GitHub](https://github.com/sonatype/nxrm3-ha-repository/tree/main/nxrm-ha) for details on the new combined Helm chart.
-
+Detailed Help instructions are also available at the following locations:
+* [Single-Node Cloud Resilient Example Using AWS] (https://help.sonatype.com/en/single-node-cloud-resilient-deployment-example-using-aws.html)
+* [Single-Node Cloud Resilient Example Using Azure] (https://help.sonatype.com/en/single-node-cloud-resilient-deployment-example-using-azure.html)
+* [Single Data Center On-Premises Resilient Example Using Kubernetes] (https://help.sonatype.com/en/single-data-center-on-premises-deployment-example-using-kubernetes.html)
+* [High Availability Deployment in AWS] (https://help.sonatype.com/en/option-3---high-availability-deployment-in-amazon-web-services--aws-.html)
+* [High Availability Deployment in Azure] (https://help.sonatype.com/en/option-4---high-availability-deployment-in-azure.html)
+* [On-Premises High Availability Deployment Using Kubernetes] (https://help.sonatype.com/en/option-2---on-premises-high-availability-deployment-using-kubernetes.html)
 Detailed Help instructions are also available at the following locations:
 * [Single-Node Cloud Resilient Example Using AWS] (https://help.sonatype.com/en/single-node-cloud-resilient-deployment-example-using-aws.html)
 * [Single-Node Cloud Resilient Example Using Azure] (https://help.sonatype.com/en/single-node-cloud-resilient-deployment-example-using-azure.html)
