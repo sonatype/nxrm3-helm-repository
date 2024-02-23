@@ -1,6 +1,5 @@
 ---
 statefulset:
-  # This is not supported
   enabled: false
 deploymentStrategy: Recreate
 image:
