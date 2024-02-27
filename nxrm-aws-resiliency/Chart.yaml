@@ -1,6 +1,8 @@
 apiVersion: v2
 name: nxrm-aws-resiliency
-description: Resilient AWS Deployment of Sonatype Nexus Repository Manager - Universal Binary repository 
+# The nxrm-aws-resiliency chart is deprecated and no longer maintained
+deprecated: true
+description: DEPRECATED Resilient AWS Deployment of Sonatype Nexus Repository Manager - Universal Binary repository
 
 # A chart can be either an 'application' or a 'library' chart.
 #
@@ -15,7 +17,7 @@ type: application
 # This is the chart version. This version number should be incremented each time you make changes
 # to the chart and its templates, including the app version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 64.0.0
+version: 64.1.0
 
 # This is the version number of the application being deployed. This version number should be
 # incremented each time you make changes to the application. Versions are not expected to
@@ -36,6 +38,4 @@ keywords:
   - nexus3
 home: https://www.sonatype.com/nexus-repository-oss
 icon: https://sonatype.github.io/helm3-charts/NexusRepo_Vertical.svg
-maintainers:
-  - name: Sonatype
 

@@ -1,14 +1,16 @@
 apiVersion: v2
 name: nexus-repository-manager
+# The nexus-repository-manager chart is deprecated and no longer maintained
+deprecated: true
 
 # This is the chart version. This version number should be incremented each time you make changes
 # to the chart and its templates, including the app version.
-version: 64.0.0
+version: 64.1.0
 # This is the version number of the application being deployed. This version number should be
 # incremented each time you make changes to the application.
 appVersion: 3.64.0
 
-description: Sonatype Nexus Repository Manager - Universal Binary repository
+description: DEPRECATED Sonatype Nexus Repository Manager - Universal Binary repository
 
 # A chart can be either an 'application' or a 'library' chart.
 #
@@ -35,6 +37,3 @@ home: https://www.sonatype.com/nexus-repository-oss
 icon: https://sonatype.github.io/helm3-charts/NexusRepo_Vertical.svg
 sources:
   - https://github.com/sonatype/nexus-public
-maintainers:
-  - email:  support@sonatype.com
-    name: Sonatype
